@@ -193,35 +193,7 @@
     #slides-area .flex.items-center.justify-between p:last-child{ display:none; }
     #empty-state .desktop-only{ display:none; }
     #empty-state .mobile-only{ display:inline; }
-    select.input-field{ cursor:pointer; }
-    #user-dropdown{
-      position:fixed; left:16px; right:16px; bottom:16px; top:auto;
-      width:auto; border-radius:16px; padding:8px;
-      box-shadow:0 8px 40px rgba(0,0,0,.5);
-    }
-    #user-dropdown::before{
-      content:''; display:block;
-      width:36px; height:4px; border-radius:4px;
-      background:var(--ink-faint); margin:0 auto 8px;
-    }
-    #user-dropdown hr{ display:none; }
-    #dropdown-user-info{ text-align:center; padding:6px 8px 10px; font-size:13px; }
-    #user-dropdown button{ padding:12px 12px; font-size:13px; border-radius:12px; }
   }
-  @media (min-width:641px){
-    select.input-field{ cursor:pointer; }
-  }
-  .picker-option{
-    display:flex; align-items:center; gap:12px;
-    padding:14px 16px; border-radius:12px;
-    transition:background .12s ease; cursor:pointer;
-    font-size:15px; line-height:1.3;
-  }
-  .picker-option:active{ background:var(--border-soft); }
-  .picker-option.selected{ color:var(--amber); }
-  .picker-option.selected i{ opacity:1; }
-  .picker-option i{ opacity:0; }
-  #picker-sheet{ overscroll-behavior:contain; }
   .color-swatch-btn{
     width:40px; height:40px;
     min-width:40px; min-height:40px;
