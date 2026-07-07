@@ -1744,4 +1744,67 @@ async function init() {
   }
 }
 
+// ---------- MOBILE PICKER ----------
+let _pickerTarget = null;
+
+function showPicker(el) {
+  _pickerTarget = el;
+  const overlay = document.getElementById("picker-overlay");
+  const sheet = document.getElementById("picker-sheet");
+  const container = document.getElementById("picker-options");
+  const value = el.value;
+  const opts = Array.from(el.options);
+
+  container.innerHTML = opts.map((o, i) => `
+    <div class="picker-option${o.value === value ? ' selected' : ''}" data-index="${i}">
+      <i class="ti ti-check text-sm" style="color:var(--amber)"></i>
+      <span>${escapeHtml(o.label)}</span>
+    </div>
+  `).join("");
+
+  overlay.classList.remove("hidden");
+  requestAnimationFrame(() => {
+    sheet.style.transition = "transform .28s cubic-bezier(.32,.72,0,1)";
+    sheet.style.transform = "translateY(0)";
+    overlay.style.background = "rgba(0,0,0,0)";
+    overlay.style.transition = "background .28s ease";
+    requestAnimationFrame(() => overlay.style.background = "rgba(0,0,0,.5)");
+  });
+}
+
+function hidePicker() {
+  const overlay = document.getElementById("picker-overlay");
+  const sheet = document.getElementById("picker-sheet");
+  sheet.style.transform = "translateY(100%)";
+  overlay.style.background = "rgba(0,0,0,0)";
+  setTimeout(() => overlay.classList.add("hidden"), 280);
+  _pickerTarget = null;
+}
+
+document.getElementById("picker-backdrop").addEventListener("click", hidePicker);
+document.getElementById("picker-options").addEventListener("click", (e) => {
+  const opt = e.target.closest(".picker-option");
+  if (!opt || !_pickerTarget) return;
+  const idx = parseInt(opt.dataset.index);
+  _pickerTarget.selectedIndex = idx;
+  _pickerTarget.dispatchEvent(new Event("change", { bubbles: true }));
+  hidePicker();
+});
+
+function initMobilePicker() {
+  if (window.innerWidth > 640) return;
+  document.querySelectorAll("select.input-field").forEach((el) => {
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      showPicker(el);
+    });
+    el.addEventListener("mousedown", (e) => e.preventDefault());
+  });
+}
+initMobilePicker();
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 640) hidePicker();
+  else initMobilePicker();
+});
+
 init();
