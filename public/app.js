@@ -1746,10 +1746,12 @@ async function init() {
 
 // ---------- MOBILE PICKER ----------
 let _pickerTarget = null;
+let _pickerTimer = null;
 
 function showPicker(el) {
   _pickerTarget = el;
   el.blur();
+  document.body.style.overflow = "hidden";
   const overlay = document.getElementById("picker-overlay");
   const sheet = document.getElementById("picker-sheet");
   const container = document.getElementById("picker-options");
@@ -1778,7 +1780,8 @@ function hidePicker() {
   const sheet = document.getElementById("picker-sheet");
   sheet.style.transform = "translateY(100%)";
   overlay.style.background = "rgba(0,0,0,0)";
-  setTimeout(() => overlay.classList.add("hidden"), 280);
+  clearTimeout(_pickerTimer);
+  _pickerTimer = setTimeout(() => { overlay.classList.add("hidden"); document.body.style.overflow = ""; _pickerTimer = null; }, 280);
   _pickerTarget = null;
 }
 

@@ -221,6 +221,7 @@
   .picker-option.selected{ color:var(--amber); }
   .picker-option.selected i{ opacity:1; }
   .picker-option i{ opacity:0; }
+  #picker-sheet{ overscroll-behavior:contain; }
   .color-swatch-btn{
     width:40px; height:40px;
     min-width:40px; min-height:40px;
