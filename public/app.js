@@ -1028,6 +1028,7 @@ function selectJsonOutputText() {
 function legacyCopyFallback(text) {
   const textarea = document.createElement("textarea");
   textarea.value = text;
+  // keep it in-flow but invisible, off-screen-fixed sometimes gets blocked by iframe scroll clipping
   textarea.style.position = "fixed";
   textarea.style.top = "0";
   textarea.style.left = "0";
@@ -1059,6 +1060,7 @@ async function handleCopyJson() {
 
   let success = false;
 
+  // Cara 1: Clipboard API modern (butuh secure context + permission, sering diblokir di iframe)
   if (navigator.clipboard && window.isSecureContext) {
     try {
       await navigator.clipboard.writeText(text);
@@ -1068,6 +1070,7 @@ async function handleCopyJson() {
     }
   }
 
+  // Cara 2: fallback execCommand (lebih kompatibel di iframe sandboxed)
   if (!success) {
     success = legacyCopyFallback(text);
   }
@@ -1077,6 +1080,7 @@ async function handleCopyJson() {
     setTimeout(() => (label.textContent = "Salin"), 1800);
     showToast("JSON disalin ke clipboard", "success");
   } else {
+    // Cara 3: tidak bisa auto-copy sama sekali, bantu user select manual lalu minta Ctrl+C / Cmd+C
     selectJsonOutputText();
     const isMac = navigator.platform.toUpperCase().includes("MAC");
     showToast(`Browser memblokir salin otomatis. Teks sudah terpilih, tekan ${isMac ? "Cmd" : "Ctrl"}+C.`, "error");
