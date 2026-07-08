@@ -315,6 +315,7 @@ function showLoginModal() {
   document.getElementById("inp-forgot-email").value = "";
   document.getElementById("inp-forgot-phone").value = "";
   document.getElementById("login-modal").classList.remove("hidden");
+  document.getElementById("login-modal").scrollTop = 0;
 }
 
 function applyRoleVisibility() {
@@ -1650,7 +1651,7 @@ function bindInputs() {
     if (e.key === "Enter") doLogin();
   });
   document.getElementById("login-modal").addEventListener("click", (e) => {
-    if (e.target === e.currentTarget) document.getElementById("login-modal").classList.add("hidden");
+    if (e.target === e.currentTarget) e.stopPropagation();
   });
 
   // FORGOT PASSWORD
