@@ -194,8 +194,8 @@
     #empty-state .mobile-only{ display:inline; }
   }
   .color-swatch-btn{
-    width:40px; height:40px;
-    min-width:40px; min-height:40px;
+    width:40px; height:34px;
+    min-width:40px; min-height:34px;
     padding:2px;
   }
   .color-swatch-btn::-webkit-color-swatch-wrapper{ padding:0; }
@@ -231,7 +231,7 @@
     .modal-row .input-field{ width:100%; }
     .carousel-card.w-44{ width:140px; }
     .color-swatch-btn{
-      width:48px; height:48px;
-      min-width:48px; min-height:48px;
+      width:48px; height:42px;
+      min-width:48px; min-height:42px;
     }
   }
