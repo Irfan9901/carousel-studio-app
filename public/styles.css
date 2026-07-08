@@ -182,6 +182,7 @@
     .layout-main .border-r{ border-right:none; border-bottom:1px solid var(--border-soft); }
     .layout-main > section{ overflow:visible; }
   }
+  #empty-state .mobile-only{ display:none; }
   @media (max-width:640px){
     body{ overflow-x:hidden; }
     .step-rail.pl-10{ padding-left:44px; }
