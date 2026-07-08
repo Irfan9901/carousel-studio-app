@@ -29,7 +29,7 @@
   .step-rail::before{
     content:'';
     position:absolute;
-    left:15px; top:32px; bottom:-8px;
+    left:16px; top:32px; bottom:-8px;
     width:1px;
     background:linear-gradient(to bottom, var(--border-strong), transparent);
   }
@@ -186,7 +186,7 @@
     body{ overflow-x:hidden; }
     main .grid-cols-2{ grid-template-columns:1fr; }
     .step-rail.pl-10{ padding-left:32px; }
-    .step-rail::before{ left:11px; }
+    .step-rail::before{ left:16px; }
     .flex-row.gap-2.mb-2{ flex-direction:column; }
     header p.text-\[11px\]{ display:none; }
     #carousel-track{ display:none; }
