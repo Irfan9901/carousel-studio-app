@@ -231,7 +231,7 @@
     .modal-row .input-field{ width:100%; }
     .carousel-card.w-44{ width:140px; }
     .color-swatch-btn{
-      width:48px; height:42px;
-      min-width:48px; min-height:42px;
+      width:48px; height:40px;
+      min-width:48px; min-height:40px;
     }
   }
