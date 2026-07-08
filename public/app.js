@@ -316,6 +316,7 @@ function showLoginModal() {
   document.getElementById("inp-forgot-phone").value = "";
   document.getElementById("login-modal").classList.remove("hidden");
   document.getElementById("login-modal").scrollTop = 0;
+  document.body.style.overflow = "hidden";
 }
 
 function applyRoleVisibility() {
@@ -1640,6 +1641,7 @@ function bindInputs() {
       renderUserMenu();
       applyRoleVisibility();
       document.getElementById("login-modal").classList.add("hidden");
+      document.body.style.overflow = "";
       await loadApiKeyAndModels();
     } catch (err) {
       showToast(err.message, "error");
