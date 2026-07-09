@@ -361,19 +361,19 @@
       <button id="btn-close-admin" class="text-lg" style="color:var(--ink-faint)"><i class="ti ti-x"></i></button>
     </div>
 
-    <div class="flex modal-row gap-2 mb-2">
-      <input id="inp-user-name" class="input-field flex-1 rounded-lg px-3 py-2 text-xs" placeholder="Nama">
-      <input id="inp-user-email" class="input-field flex-1 rounded-lg px-3 py-2 text-xs" placeholder="Email">
+    <div class="flex flex-wrap gap-2 mb-2">
+      <input id="inp-user-name" class="input-field flex-1 rounded-lg px-3 py-2 text-xs min-w-0" placeholder="Nama">
+      <input id="inp-user-email" class="input-field flex-1 rounded-lg px-3 py-2 text-xs min-w-0" placeholder="Email">
     </div>
-    <div class="flex modal-row gap-2 mb-2">
-      <input id="inp-user-phone" class="input-field flex-1 rounded-lg px-3 py-2 text-xs" placeholder="No. WA (08... / 628...)">
-      <div class="flex items-center flex-1 min-w-0 rounded-lg" style="background:#100E0A; border:1px solid var(--border-soft)">
+    <div class="flex flex-wrap gap-2 mb-2">
+      <input id="inp-user-phone" class="input-field flex-1 rounded-lg px-3 py-2 text-xs min-w-0" placeholder="No. WA (08... / 628...)">
+      <div class="flex items-center flex-[1_0_0%] min-w-0 rounded-lg" style="background:#100E0A; border:1px solid var(--border-soft)">
         <input id="inp-user-password" type="password" class="flex-1 min-w-0" placeholder="Password" style="border:none; outline:none; background:transparent; color:var(--cream); padding:6px 12px; font-size:12px">
         <button data-toggle-pw="inp-user-password" type="button" class="flex-shrink-0 flex items-center justify-center mr-0.5 rounded-md hover:bg-[var(--bg-card-hover)]" style="color:var(--ink-faint); width:26px; height:26px">
           <i class="ti ti-eye text-sm"></i>
         </button>
       </div>
-      <select id="inp-user-role" class="input-field rounded-lg px-3 py-2 text-xs flex-1 min-w-0">
+      <select id="inp-user-role" class="input-field rounded-lg px-3 py-2 text-xs min-w-0">
         <option value="user">User</option>
         <option value="admin">Admin</option>
       </select>
