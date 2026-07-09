@@ -236,6 +236,7 @@
     .layout-main > section{ padding-left:16px; padding-right:16px; }
     .modal-row{ flex-direction:column; }
     .modal-row .input-field{ width:100%; }
+    .modal-row select{ width:100%; }
     .carousel-card.w-44{ width:140px; }
     .color-swatch-btn{
       width:48px; height:40px;
