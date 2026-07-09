@@ -1568,7 +1568,7 @@ function bindInputs() {
   });
   // -- Prompt AI Modal --
   async function openPromptModal() {
-    document.getElementById("admin-modal").classList.add("hidden");
+    document.getElementById("ai-modal").classList.add("hidden");
     document.getElementById("prompt-modal").classList.remove("hidden");
     try {
       const data = await api("/api/ai/prompts");
