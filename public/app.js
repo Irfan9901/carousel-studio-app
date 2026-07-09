@@ -336,6 +336,7 @@ function applyRoleVisibility() {
   const isUserAdmin = isAdmin();
   document.getElementById("admin-only-section")?.classList.toggle("hidden", !isUserAdmin);
   document.getElementById("btn-admin-panel")?.classList.toggle("hidden", !isUserAdmin);
+  document.getElementById("btn-prompt-ai")?.classList.toggle("hidden", !isUserAdmin);
 }
 
 async function addUser() {
@@ -1568,7 +1569,7 @@ function bindInputs() {
   });
   // -- Prompt AI Modal --
   async function openPromptModal() {
-    document.getElementById("ai-modal").classList.add("hidden");
+    document.getElementById("user-dropdown").classList.add("hidden");
     document.getElementById("prompt-modal").classList.remove("hidden");
     try {
       const data = await api("/api/ai/prompts");
