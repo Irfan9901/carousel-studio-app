@@ -397,15 +397,15 @@
     <!-- API KEY -->
     <div class="mb-4">
       <label class="block text-xs mb-1.5" style="color:var(--ink-soft)">OpenCode API Key <span class="text-[10px]" style="color:var(--ink-faint)">(dari <a href="https://opencode.ai/auth" target="_blank" style="color:var(--amber)">opencode.ai/auth</a>)</span></label>
-      <div class="flex gap-2 items-center">
+      <div class="flex gap-2 items-center mb-1.5">
         <input id="inp-ai-api-key" type="password" autocomplete="off" class="input-field flex-1 rounded-lg px-3 py-2.5 text-sm" placeholder="oc_..." value="">
         <button id="btn-toggle-ai-key" class="btn-ghost rounded-lg px-2.5 py-2.5 text-sm" title="Tampilkan/sembunyikan key">
           <i class="ti ti-eye text-base"></i>
         </button>
-        <div class="flex flex-col gap-1 flex-shrink-0">
-          <span id="ai-key-status" class="text-xs" style="color:var(--ink-faint)"></span>
-          <button id="btn-delete-api-key" class="text-[10px] text-left hidden hover:text-rose-400" style="color:var(--ink-faint)">Hapus API Key</button>
-        </div>
+      </div>
+      <div class="flex items-center gap-3 min-h-5">
+        <span id="ai-key-status" class="text-xs" style="color:var(--ink-faint)"></span>
+        <button id="btn-delete-api-key" class="text-xs rounded-md px-2 py-0.5 hidden hover:text-rose-400 hover:bg-[var(--bg-card-hover)]" style="color:var(--ink-faint); border:1px solid var(--border-soft)">Hapus</button>
       </div>
     </div>
 
