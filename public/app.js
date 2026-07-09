@@ -772,6 +772,17 @@ function showToast(message, type = "default") {
   }, 2600);
 }
 
+function showConfirm(msg) {
+  return new Promise((resolve) => {
+    const modal = document.getElementById("confirm-modal");
+    document.getElementById("confirm-msg").textContent = msg;
+    modal.classList.remove("hidden");
+    const cleanup = () => { modal.classList.add("hidden"); };
+    document.getElementById("confirm-ok").onclick = () => { cleanup(); resolve(true); };
+    document.getElementById("confirm-cancel").onclick = () => { cleanup(); resolve(false); };
+  });
+}
+
 function resetApp(silent) {
   abortGeneration();
   state.topic = "";
@@ -1467,8 +1478,9 @@ function bindInputs() {
     document.getElementById("user-dropdown").classList.add("hidden");
     showLoginModal();
   });
-  document.getElementById("btn-logout").addEventListener("click", () => {
-    if (!confirm("Yakin ingin logout?")) return;
+  document.getElementById("btn-logout").addEventListener("click", async () => {
+    const ok = await showConfirm("Yakin ingin logout?");
+    if (!ok) return;
     resetApp(true);
     clearToken();
     state.currentUser = null;
