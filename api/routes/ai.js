@@ -16,7 +16,7 @@ const FREE_MODELS = [
 async function getConfig() {
   let cfg = await get('config');
   if (!cfg) {
-    cfg = { apiKeyEncrypted: null, activeModels: FREE_MODELS.map((m) => m.id), customModels: [], archivedModels: [] };
+    cfg = { apiKeyEncrypted: null, activeModels: FREE_MODELS.map((m) => m.id), customModels: [] };
     await set('config', cfg);
   }
   return cfg;
@@ -29,10 +29,8 @@ async function saveConfig(cfg) {
 router.get('/models', requireAuth, async (req, res) => {
   try {
     const cfg = await getConfig();
-    const archived = cfg.archivedModels || [];
-    const filteredFree = FREE_MODELS.filter((m) => !archived.includes(m.id));
     const customModels = (cfg.customModels || []).map((id) => ({ id, custom: true }));
-    const allModels = [...filteredFree, ...customModels];
+    const allModels = [...FREE_MODELS, ...customModels];
     res.json({
       models: allModels,
       activeModels: cfg.activeModels || allModels.map((m) => m.id),
@@ -127,12 +125,10 @@ router.delete('/models/:id', requireAdmin, async (req, res) => {
     const cfg = await getConfig();
     const id = req.params.id;
     if (FREE_MODELS.some((m) => m.id === id)) {
-      cfg.archivedModels = [...new Set([...(cfg.archivedModels || []), id])];
-      cfg.activeModels = (cfg.activeModels || []).filter((m) => m !== id);
-    } else {
-      cfg.customModels = (cfg.customModels || []).filter((m) => m !== id);
-      cfg.activeModels = (cfg.activeModels || []).filter((m) => m !== id);
+      return res.status(403).json({ error: 'Cannot delete built-in model' });
     }
+    cfg.customModels = (cfg.customModels || []).filter((m) => m !== id);
+    cfg.activeModels = (cfg.activeModels || []).filter((m) => m !== id);
     await saveConfig(cfg);
     res.json({ success: true });
   } catch (err) {
