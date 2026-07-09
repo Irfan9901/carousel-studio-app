@@ -375,7 +375,12 @@
     </div>
     <div class="flex modal-row gap-2 mb-2">
       <input id="inp-user-phone" class="input-field flex-1 rounded-lg px-3 py-2 text-xs" placeholder="No. WA (08... / 628...)">
-      <input id="inp-user-password" type="password" class="input-field flex-1 rounded-lg px-3 py-2 text-xs" placeholder="Password">
+      <div class="flex items-center flex-1 rounded-lg" style="background:#100E0A; border:1px solid var(--border-soft)">
+      <input id="inp-user-password" type="password" class="flex-1 bg-transparent px-3 py-2 text-xs" placeholder="Password" style="border:none; outline:none; color:var(--cream); min-width:0">
+      <button data-toggle-pw="inp-user-password" type="button" class="flex-shrink-0 flex items-center justify-center mr-0.5 rounded-md hover:bg-[var(--bg-card-hover)]" style="color:var(--ink-faint); width:26px; height:26px">
+        <i class="ti ti-eye text-sm"></i>
+      </button>
+    </div>
       <select id="inp-user-role" class="input-field rounded-lg px-3 py-2 text-xs">
         <option value="user">User</option>
         <option value="admin">Admin</option>
@@ -427,9 +432,24 @@
       <h3 class="font-display text-sm" style="color:var(--cream)">Ganti Password</h3>
       <button id="btn-close-password" class="text-lg" style="color:var(--ink-faint)"><i class="ti ti-x"></i></button>
     </div>
-    <input id="inp-password-current" type="password" class="input-field w-full rounded-lg px-3 py-2.5 text-sm mb-2" placeholder="Password saat ini">
-    <input id="inp-password-new" type="password" class="input-field w-full rounded-lg px-3 py-2.5 text-sm mb-2" placeholder="Password baru">
-    <input id="inp-password-confirm" type="password" class="input-field w-full rounded-lg px-3 py-2.5 text-sm mb-3" placeholder="Konfirmasi password baru">
+    <div class="flex items-center rounded-lg mb-2" style="background:#100E0A; border:1px solid var(--border-soft)">
+      <input id="inp-password-current" type="password" class="flex-1 bg-transparent px-3 py-2.5 text-sm" placeholder="Password saat ini" style="border:none; outline:none; color:var(--cream); min-width:0">
+      <button data-toggle-pw="inp-password-current" type="button" class="flex-shrink-0 flex items-center justify-center mr-1 rounded-md hover:bg-[var(--bg-card-hover)]" style="color:var(--ink-faint); width:32px; height:32px">
+        <i class="ti ti-eye"></i>
+      </button>
+    </div>
+    <div class="flex items-center rounded-lg mb-2" style="background:#100E0A; border:1px solid var(--border-soft)">
+      <input id="inp-password-new" type="password" class="flex-1 bg-transparent px-3 py-2.5 text-sm" placeholder="Password baru" style="border:none; outline:none; color:var(--cream); min-width:0">
+      <button data-toggle-pw="inp-password-new" type="button" class="flex-shrink-0 flex items-center justify-center mr-1 rounded-md hover:bg-[var(--bg-card-hover)]" style="color:var(--ink-faint); width:32px; height:32px">
+        <i class="ti ti-eye"></i>
+      </button>
+    </div>
+    <div class="flex items-center rounded-lg mb-3" style="background:#100E0A; border:1px solid var(--border-soft)">
+      <input id="inp-password-confirm" type="password" class="flex-1 bg-transparent px-3 py-2.5 text-sm" placeholder="Konfirmasi password baru" style="border:none; outline:none; color:var(--cream); min-width:0">
+      <button data-toggle-pw="inp-password-confirm" type="button" class="flex-shrink-0 flex items-center justify-center mr-1 rounded-md hover:bg-[var(--bg-card-hover)]" style="color:var(--ink-faint); width:32px; height:32px">
+        <i class="ti ti-eye"></i>
+      </button>
+    </div>
     <button id="btn-save-password" class="btn-primary w-full rounded-lg px-4 py-2.5 text-sm font-semibold">Simpan Password</button>
   </div>
 </div>
@@ -497,7 +517,7 @@
           <label class="block text-xs mb-1.5" style="color:var(--ink-soft)">Password</label>
           <div class="flex items-center rounded-xl" style="background:#100E0A; border:1px solid var(--border-soft)">
             <input id="inp-login-password" type="password" class="flex-1 px-4 py-3 text-sm" placeholder="Masukkan password" style="border:none; outline:none; background:transparent; color:var(--cream); min-width:0">
-            <button id="btn-toggle-login-pw" type="button" class="flex-shrink-0 flex items-center justify-center mr-1 rounded-lg hover:bg-[var(--bg-card-hover)]" style="color:var(--ink-faint); width:36px; height:36px">
+            <button data-toggle-pw="inp-login-password" type="button" class="flex-shrink-0 flex items-center justify-center mr-1 rounded-lg hover:bg-[var(--bg-card-hover)]" style="color:var(--ink-faint); width:36px; height:36px">
               <i class="ti ti-eye text-lg"></i>
             </button>
           </div>

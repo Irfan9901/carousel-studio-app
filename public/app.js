@@ -1652,16 +1652,18 @@ function bindInputs() {
   document.getElementById("inp-login-password").addEventListener("keydown", (e) => {
     if (e.key === "Enter") doLogin();
   });
-  document.getElementById("btn-toggle-login-pw").addEventListener("click", () => {
-    const inp = document.getElementById("inp-login-password");
-    const icon = document.querySelector("#btn-toggle-login-pw i");
-    if (inp.type === "password") {
-      inp.type = "text";
-      icon.className = "ti ti-eye-off text-lg";
-    } else {
-      inp.type = "password";
-      icon.className = "ti ti-eye text-lg";
-    }
+  document.querySelectorAll("[data-toggle-pw]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const inp = document.getElementById(btn.getAttribute("data-toggle-pw"));
+      const icon = btn.querySelector("i");
+      if (inp.type === "password") {
+        inp.type = "text";
+        icon.className = "ti ti-eye-off";
+      } else {
+        inp.type = "password";
+        icon.className = "ti ti-eye";
+      }
+    });
   });
   document.getElementById("login-modal").addEventListener("click", (e) => {
     if (e.target === e.currentTarget) e.stopPropagation();
