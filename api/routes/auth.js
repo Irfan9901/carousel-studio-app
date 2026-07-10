@@ -1,10 +1,19 @@
 const express = require('express');
 const { v4: uuidv4 } = require('uuid');
+const rateLimit = require('express-rate-limit');
 const { get, set } = require('../../lib/db');
 const { hashPassword, verifyPassword } = require('../../lib/crypto');
 const { generateToken, requireAuth } = require('../middleware/auth');
 
 const router = express.Router();
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { error: 'Too many attempts. Try again in 15 minutes.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 function normalizePhone(phone) {
   const digits = (phone || '').replace(/[^0-9]/g, '');
@@ -33,7 +42,7 @@ async function ensureAdminExists() {
   return users;
 }
 
-router.post('/login', async (req, res) => {
+router.post('/login', authLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -61,7 +70,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.post('/register', async (req, res) => {
+router.post('/register', authLimiter, async (req, res) => {
   try {
     const { name, email, password, phone, role } = req.body;
     if (!name || !email || !password) {
@@ -125,7 +134,7 @@ router.post('/change-password', requireAuth, async (req, res) => {
   }
 });
 
-router.post('/forgot-password', async (req, res) => {
+router.post('/forgot-password', authLimiter, async (req, res) => {
   try {
     const { email, phone } = req.body;
     if (!email || !phone) {
