@@ -5,7 +5,8 @@ const { initLocal } = require('../lib/db');
 
 const app = express();
 
-app.use(cors({ origin: true, credentials: true }));
+const CORS_ORIGIN = process.env.CORS_ORIGIN || 'http://localhost:8090';
+app.use(cors({ origin: CORS_ORIGIN, credentials: true }));
 app.use(express.json());
 
 // API routes
