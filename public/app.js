@@ -650,10 +650,10 @@ function roleLabel(role) {
 }
 
 function renderSlidesArea() {
-  const hasContent = state.topic.trim().length > 0;
-  document.getElementById("empty-state").classList.toggle("hidden", hasContent);
-  document.getElementById("slides-area").classList.toggle("hidden", !hasContent);
-  if (!hasContent) return;
+  const hasGeneratedSlides = state.slides.some((s) => s.body || s.visualIdea);
+  document.getElementById("empty-state").classList.toggle("hidden", hasGeneratedSlides);
+  document.getElementById("slides-area").classList.toggle("hidden", !hasGeneratedSlides);
+  if (!hasGeneratedSlides) return;
 
   document.getElementById("slide-count-label").textContent = state.slides.length;
   renderCarouselTrack();
