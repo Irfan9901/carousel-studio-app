@@ -1227,10 +1227,14 @@ function selectJsonOutputText() {
   return selection;
 }
 
+function isIOS() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+}
+
 function legacyCopyFallback(text) {
   const textarea = document.createElement("textarea");
   textarea.value = text;
-  // keep it in-flow but invisible, off-screen-fixed sometimes gets blocked by iframe scroll clipping
   textarea.style.position = "fixed";
   textarea.style.top = "0";
   textarea.style.left = "0";
@@ -1251,7 +1255,23 @@ function legacyCopyFallback(text) {
   return ok;
 }
 
-async function handleCopyJson() {
+function showCopySuccess(label) {
+  label.textContent = "Tersalin";
+  setTimeout(() => (label.textContent = "Salin"), 1800);
+  showToast("JSON disalin ke clipboard", "success");
+}
+
+function showCopyFailed() {
+  selectJsonOutputText();
+  if (isIOS()) {
+    showToast("Ketuk dan tahan teks yang terpilih, lalu pilih Salin", "error");
+  } else {
+    const isMac = navigator.platform.toUpperCase().includes("MAC");
+    showToast(`Teks sudah terpilih, tekan ${isMac ? "Cmd" : "Ctrl"}+C`, "error");
+  }
+}
+
+function handleCopyJson() {
   const text = document.getElementById("json-output").textContent;
   const label = document.getElementById("copy-label");
 
@@ -1260,32 +1280,21 @@ async function handleCopyJson() {
     return;
   }
 
-  let success = false;
-
-  // Cara 1: Clipboard API modern (butuh secure context + permission, sering diblokir di iframe)
-  if (navigator.clipboard && window.isSecureContext) {
-    try {
-      await navigator.clipboard.writeText(text);
-      success = true;
-    } catch (err) {
-      success = false;
-    }
-  }
-
-  // Cara 2: fallback execCommand (lebih kompatibel di iframe sandboxed)
-  if (!success) {
-    success = legacyCopyFallback(text);
-  }
-
-  if (success) {
-    label.textContent = "Tersalin";
-    setTimeout(() => (label.textContent = "Salin"), 1800);
-    showToast("JSON disalin ke clipboard", "success");
+  // Clipboard API: panggil synchronous dari user gesture (tidak pakai async/await)
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      showCopySuccess(label);
+    }).catch(() => {
+      // fallback: select text + instruksi manual
+      showCopyFailed();
+    });
   } else {
-    // Cara 3: tidak bisa auto-copy sama sekali, bantu user select manual lalu minta Ctrl+C / Cmd+C
-    selectJsonOutputText();
-    const isMac = navigator.platform.toUpperCase().includes("MAC");
-    showToast(`Browser memblokir salin otomatis. Teks sudah terpilih, tekan ${isMac ? "Cmd" : "Ctrl"}+C.`, "error");
+    // Fallback: execCommand (jarang available, iOS 16+ sudah hapus)
+    if (legacyCopyFallback(text)) {
+      showCopySuccess(label);
+    } else {
+      showCopyFailed();
+    }
   }
 }
 
@@ -1303,21 +1312,24 @@ function handleDownloadJson() {
   showToast("File JSON diunduh", "success");
 }
 
-async function copySlideJson(slideId) {
+function copySlideJson(slideId) {
   const slide = state.slides.find((s) => s.id === slideId);
   if (!slide) return;
   const idx = state.slides.indexOf(slide);
   const json = buildSingleSlideJson(slide, idx);
   const text = JSON.stringify(json, null, 2);
 
-  let success = false;
-  if (navigator.clipboard && window.isSecureContext) {
-    try { await navigator.clipboard.writeText(text); success = true; } catch { success = false; }
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast(`JSON slide ${idx + 1} disalin`, "success");
+    }).catch(() => {
+      showToast("Gagal menyalin JSON slide", "error");
+    });
+  } else if (legacyCopyFallback(text)) {
+    showToast(`JSON slide ${idx + 1} disalin`, "success");
+  } else {
+    showToast("Gagal menyalin JSON slide", "error");
   }
-  if (!success) success = legacyCopyFallback(text);
-
-  if (success) showToast(`JSON slide ${idx + 1} disalin`, "success");
-  else showToast("Gagal menyalin JSON", "error");
 }
 
 // ---------- INIT / BIND ----------
