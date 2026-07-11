@@ -128,7 +128,7 @@ const DEFAULT_PROMPTS = {
   system_idea: "Kamu adalah asisten kreator konten kreatif. Gunakan bahasa yang SAMA dengan bahasa yang digunakan pada topik/niche yang diberikan. Berdasarkan niche yang diberikan, buatkan 1 ide topik carousel Instagram yang menarik, relevan, dan spesifik. Gunakan bahasa santai alami seperti tulisan manusia, hindari frasa klise AI. Balas HANYA dengan JSON object: {\"topic\": \"string judul carousel max 10 kata, gunakan bahasa yang sama dengan bahasa topik\"}. Jangan tambahkan teks lain.",
   user_idea: "Niche: {{niche}}",
   system_slide: "Kamu adalah asisten penyusun konten carousel Instagram. Gunakan bahasa yang SAMA dengan bahasa yang digunakan pada topik. Tugasmu: menyusun isi tiap slide (headline, isi teks singkat, ide visual) berdasarkan brief yang diberikan. Gunakan bahasa santai alami seperti tulisan manusia, hindari frasa klise AI. Buat kalimat yang terdengar manusiawi jika dibaca, bukan kalimat-kalimat nanggung khas AI. Balas HANYA dengan JSON array, tanpa teks lain, tanpa markdown code fence. Format tiap elemen: {\"headline\": \"string pendek menarik max 8 kata, bahasa sesuai topik\", \"body\": \"string 1 kalimat pendukung max 18 kata, bahasa sesuai topik\", \"visualIdea\": \"string deskripsi visual konkret dalam bahasa Inggris untuk AI image generator, max 15 kata\"}. Slide pertama harus jadi cover/hook pembuka yang kuat. Buat kalimat pembuka pada slide pertama dengan hook yang emosional dan memikat audiens. Slide terakhir harus jadi kesimpulan atau call-to-action sesuai tujuan. Jumlah elemen array harus PERSIS sama dengan jumlah slide yang diminta.",
-  user_slide: "Topik: {{topic}}\nTujuan: {{purpose}}\nTarget audiens: {{audience}}\nJumlah slide: {{slideCount}}{{customStyleNote}}\n \nSusun {{slideCount}} slide untuk carousel ini.",
+  user_slide: "Topik: {{topic}}\nTujuan: {{purpose}}\nTarget audiens: {{audience}}\nJumlah slide: {{slideCount}}{{customStyleNote}}{{brandNoteLine}}\n \nSusun {{slideCount}} slide untuk carousel ini.",
   negative_prompt: "blurry, low quality, distorted text, extra limbs, watermark, signature, cropped, jpeg artifacts, inconsistent style with other slides"
 };
 
@@ -1198,6 +1198,7 @@ async function aiGenerateSlideContent() {
   const p = state.prompts || DEFAULT_PROMPTS;
   const systemPrompt = p.system_slide;
   const customStyleNote = state.customStyle.trim() ? `\nAturan tambahan: ${state.customStyle.trim()}` : "";
+  const brandNoteLine = state.brandNote.trim() ? `\nBrand/Catatan: ${state.brandNote.trim()}` : "";
   const userPrompt = replacePromptVars(p.user_slide, {
     topic: state.topic,
     purpose: state.purpose,
@@ -1205,6 +1206,7 @@ async function aiGenerateSlideContent() {
     slideCount: String(state.slideCount),
     customStyle: state.customStyle,
     customStyleNote,
+    brandNoteLine,
   });
 
   const modelsToTry = getActiveModels();
