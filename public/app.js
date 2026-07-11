@@ -1324,25 +1324,28 @@ function copySlideJson(slideId, btn) {
   const idx = state.slides.indexOf(slide);
   const json = buildSingleSlideJson(slide, idx);
   const text = JSON.stringify(json, null, 2);
+  const orig = btn.innerHTML;
 
-  function showBtnSuccess() {
-    const orig = btn.innerHTML;
-    btn.innerHTML = '<i class="ti ti-check text-sm"></i> Tersalin';
-    setTimeout(() => { btn.innerHTML = orig; }, 1800);
+  // Immediate feedback — user tahu tombolnya merespons
+  btn.innerHTML = '<i class="ti ti-clipboard text-sm"></i> Menyalin…';
+
+  function done(ok) {
+    if (ok) {
+      btn.innerHTML = '<i class="ti ti-check text-sm"></i> Tersalin';
+      showToast(`JSON slide ${idx + 1} disalin`, "success");
+      setTimeout(() => { btn.innerHTML = orig; }, 1800);
+    } else {
+      btn.innerHTML = orig;
+      showCopySlideFailed(text);
+    }
   }
 
   if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).then(() => {
-      showBtnSuccess();
-      showToast(`JSON slide ${idx + 1} disalin`, "success");
-    }).catch(() => {
-      showCopySlideFailed(text);
-    });
+    navigator.clipboard.writeText(text).then(() => done(true)).catch(() => done(false));
   } else if (legacyCopyFallback(text)) {
-    showBtnSuccess();
-    showToast(`JSON slide ${idx + 1} disalin`, "success");
+    done(true);
   } else {
-    showCopySlideFailed(text);
+    done(false);
   }
 }
 
@@ -1955,6 +1958,9 @@ async function init() {
   renderStylePresets();
   bindInputs();
   renderSlidesArea();
+
+  // Aktifkan :active pseudo-class di iOS Safari (tanpa ini :active tidak bekerja di <button>)
+  document.body.addEventListener("touchstart", () => {}, { passive: true });
 
   updateColorSwatches();
   updateRatioIcon();
