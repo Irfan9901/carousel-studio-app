@@ -268,6 +268,9 @@
       background:transparent;
       font-weight:600;
     }
+    #user-dropdown .dropdown-btn.hidden{
+      display:none !important;
+    }
     #user-dropdown .dropdown-btn:hover,
     #user-dropdown .dropdown-btn:active{
       background:var(--amber-soft) !important;
