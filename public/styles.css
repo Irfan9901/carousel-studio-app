@@ -209,9 +209,15 @@
     color:var(--ink-soft);
     transition:background .15s ease, color .15s ease;
   }
-  #user-dropdown button:hover{
+  #user-dropdown button:hover,
+  #user-dropdown button:active{
     background:var(--amber-soft);
     color:var(--amber);
+  }
+
+  select.input-field{ transition:border-color .15s ease, background .15s ease; }
+  @media (hover: hover){
+    select.input-field:hover{ border-color:var(--amber-dim); }
   }
 
 
