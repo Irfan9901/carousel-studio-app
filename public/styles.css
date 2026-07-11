@@ -205,20 +205,20 @@
   .role-badge-isi{ background:#19170F; color:var(--ink-soft); border-color:var(--border-soft); }
   .role-badge-penutup{ background:#2E1A16; color:var(--coral); border-color:#5A2E20; }
 
-  #user-dropdown button{
+  .dropdown-btn{
     color:var(--ink-soft);
     transition:background .15s ease, color .15s ease;
   }
-  #user-dropdown button:hover,
-  #user-dropdown button:active{
-    background:var(--amber-soft);
-    color:var(--amber);
+  .dropdown-btn:hover,
+  .dropdown-btn:active,
+  .dropdown-btn:focus-visible{
+    background:var(--amber-soft) !important;
+    color:var(--amber) !important;
   }
 
   select.input-field{ transition:border-color .15s ease, background .15s ease; }
-  @media (hover: hover){
-    select.input-field:hover{ border-color:var(--amber-dim); }
-  }
+  select.input-field:hover{ border-color:var(--amber-dim); }
+
 
 
 
