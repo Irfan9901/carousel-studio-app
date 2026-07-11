@@ -770,6 +770,13 @@ function renderSlideList() {
       renderSlidesArea();
     });
   });
+
+  list.querySelectorAll("[data-copy-json]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      copySlideJson(btn.getAttribute("data-copy-json"), btn);
+    });
+  });
 }
 
 function showToast(message, type = "default") {
@@ -1312,23 +1319,50 @@ function handleDownloadJson() {
   showToast("File JSON diunduh", "success");
 }
 
-function copySlideJson(slideId) {
+function copySlideJson(slideId, btn) {
   const slide = state.slides.find((s) => s.id === slideId);
   if (!slide) return;
   const idx = state.slides.indexOf(slide);
   const json = buildSingleSlideJson(slide, idx);
   const text = JSON.stringify(json, null, 2);
 
+  function showBtnSuccess() {
+    const orig = btn.innerHTML;
+    btn.innerHTML = '<i class="ti ti-check text-sm"></i> Tersalin';
+    setTimeout(() => { btn.innerHTML = orig; }, 1800);
+  }
+
   if (navigator.clipboard) {
     navigator.clipboard.writeText(text).then(() => {
+      showBtnSuccess();
       showToast(`JSON slide ${idx + 1} disalin`, "success");
     }).catch(() => {
-      showToast("Gagal menyalin JSON slide", "error");
+      showCopySlideFailed(text);
     });
   } else if (legacyCopyFallback(text)) {
+    showBtnSuccess();
     showToast(`JSON slide ${idx + 1} disalin`, "success");
   } else {
-    showToast("Gagal menyalin JSON slide", "error");
+    showCopySlideFailed(text);
+  }
+}
+
+function showCopySlideFailed(text) {
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.style.position = "fixed";
+  textarea.style.top = "0";
+  textarea.style.left = "0";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
+  textarea.setSelectionRange(0, text.length);
+  if (isIOS()) {
+    showToast("Ketuk dan tahan teks di area gelap, lalu pilih Salin", "error");
+  } else {
+    const isMac = navigator.platform.toUpperCase().includes("MAC");
+    showToast(`Gagal salin otomatis. Tekan ${isMac ? "Cmd" : "Ctrl"}+C`, "error");
   }
 }
 
@@ -1481,14 +1515,6 @@ function bindInputs() {
   document.getElementById("btn-refresh-models").addEventListener("click", fetchFreeModels);
 
   document.getElementById("btn-ai-generate").addEventListener("click", aiGenerateSlideContent);
-
-  document.addEventListener("click", (e) => {
-    const copyBtn = e.target.closest("[data-copy-json]");
-    if (copyBtn) {
-      copySlideJson(copyBtn.getAttribute("data-copy-json"));
-      return;
-    }
-  });
 
   document.getElementById("btn-reset").addEventListener("click", resetApp);
 
