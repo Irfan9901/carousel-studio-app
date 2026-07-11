@@ -13,6 +13,7 @@ app.use(express.json());
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/ai', require('./routes/ai'));
+app.use('/api/category-images', require('./routes/categoryImages'));
 
 // Serve static frontend
 app.use(express.static(path.join(__dirname, '..', 'public')));

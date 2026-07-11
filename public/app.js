@@ -236,6 +236,7 @@ const state = {
   authToken: sessionStorage.getItem("cps_auth_token") || localStorage.getItem("cps_auth_token") || "",
   currentUser: null,
   prompts: null,
+  categoryImages: {},
 };
 
 // ── API client ──
@@ -278,6 +279,7 @@ function renderUserMenu() {
   const logoutBtn = document.getElementById("btn-logout");
   const aiBtn = document.getElementById("btn-ai-panel");
   const adminBtn = document.getElementById("btn-admin-panel");
+  const imgBtn = document.getElementById("btn-category-images");
   if (label) label.textContent = u ? "Welcome, " + u.name : "Guest";
   if (info) info.textContent = u ? `${u.name} (${u.role})` : "Belum login";
   if (u) {
@@ -288,6 +290,7 @@ function renderUserMenu() {
     logoutBtn?.classList.remove("hidden");
     aiBtn?.classList.toggle("hidden", !isUserAdmin);
     adminBtn?.classList.toggle("hidden", !isUserAdmin);
+    imgBtn?.classList.toggle("hidden", !isUserAdmin);
   } else {
     switchBtn?.classList.add("hidden");
     passwordBtn?.classList.add("hidden");
@@ -295,6 +298,7 @@ function renderUserMenu() {
     logoutBtn?.classList.add("hidden");
     aiBtn?.classList.add("hidden");
     adminBtn?.classList.add("hidden");
+    imgBtn?.classList.add("hidden");
   }
   const welcome = document.getElementById("welcome-user-name");
   if (welcome) welcome.textContent = u ? u.name : "User";
@@ -340,6 +344,7 @@ function applyRoleVisibility() {
   document.getElementById("admin-only-section")?.classList.toggle("hidden", !isUserAdmin);
   document.getElementById("btn-admin-panel")?.classList.toggle("hidden", !isUserAdmin);
   document.getElementById("btn-prompt-ai")?.classList.toggle("hidden", !isUserAdmin);
+  document.getElementById("btn-category-images")?.classList.toggle("hidden", !isUserAdmin);
 }
 
 async function addUser() {
@@ -608,16 +613,19 @@ function renderStylePresets() {
     grid.innerHTML = "";
     return;
   }
-  grid.innerHTML = styles.map((s) => `
+  grid.innerHTML = styles.map((s) => {
+    const img = state.categoryImages[s.id];
+    return `
     <button data-style="${s.id}" class="style-card relative text-left rounded-lg px-3 py-2.5 border" style="background:var(--bg-card); border-color:${s.id === state.stylePreset ? 'var(--amber)' : 'var(--border-soft)'}">
+      ${img ? `<img src="${img}" alt="${s.label}" class="style-thumb" loading="lazy">` : ""}
       <div class="flex items-center justify-between mb-1">
         <i class="ti ${s.icon} text-base" style="color:var(--amber-dim)"></i>
         <i class="ti ti-circle-check-filled style-check text-sm" style="color:var(--amber)"></i>
       </div>
       <div class="text-xs font-medium" style="color:var(--cream)">${s.label}</div>
       <div class="text-[10px] mt-0.5" style="color:var(--ink-faint)">${s.desc}</div>
-    </button>
-  `).join("");
+    </button>`;
+  }).join("");
 
   grid.querySelectorAll("[data-style]").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -883,6 +891,94 @@ async function loadPrompts() {
     state.prompts = data.prompts;
     state.negativePrompt = data.prompts.negative_prompt;
   } catch { state.prompts = { ...DEFAULT_PROMPTS }; }
+}
+
+async function loadCategoryImages() {
+  try {
+    const data = await api("/api/category-images");
+    state.categoryImages = data.images || {};
+  } catch { state.categoryImages = {}; }
+}
+
+function openImageModal() {
+  document.getElementById("img-modal").classList.remove("hidden");
+  document.getElementById("img-modal").scrollTop = 0;
+  document.body.style.overflow = "hidden";
+  renderCategoryImageManager();
+}
+
+function closeImageModal() {
+  document.getElementById("img-modal").classList.add("hidden");
+  document.body.style.overflow = "";
+}
+
+function renderCategoryImageManager() {
+  const list = document.getElementById("category-image-list");
+  const allStyles = ALL_STYLES;
+  const cats = Object.keys(VISUAL_CATEGORIES);
+  list.innerHTML = cats.map((cat) => {
+    const styles = VISUAL_CATEGORIES[cat];
+    return `
+      <div class="rounded-lg p-3" style="background:var(--bg-canvas)">
+        <div class="text-xs font-medium mb-2" style="color:var(--cream)">${cat}</div>
+        <div class="flex flex-col gap-2">
+          ${styles.map((s) => {
+            const img = state.categoryImages[s.id] || "";
+            return `
+            <div class="flex items-center gap-3 rounded-lg px-3 py-2" style="background:var(--bg-card)">
+              <div class="flex-1 min-w-0">
+                <div class="text-xs" style="color:var(--cream)">${s.label}</div>
+                <div class="text-[10px]" style="color:var(--ink-faint)">${s.id}</div>
+              </div>
+              ${img ? `<img src="${img}" class="cat-img-thumb">` : `<span class="text-[10px]" style="color:var(--ink-faint)">Tidak ada gambar</span>`}
+              <label class="btn-ghost text-[10px] rounded-md px-2 py-1 cursor-pointer" style="flex-shrink:0">
+                ${img ? "Ganti" : "Upload"}
+                <input type="file" accept="image/*" data-upload-img="${s.id}" class="hidden">
+              </label>
+              ${img ? `<button data-del-img="${s.id}" class="text-xs hover:text-[var(--coral)]" style="color:var(--ink-faint)"><i class="ti ti-trash"></i></button>` : ""}
+            </div>`;
+          }).join("")}
+        </div>
+      </div>`;
+  }).join("");
+
+  list.querySelectorAll("[data-upload-img]").forEach((inp) => {
+    inp.addEventListener("change", async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const styleId = e.target.getAttribute("data-upload-img");
+
+      const reader = new FileReader();
+      reader.onload = async (ev) => {
+        const imageData = ev.target.result;
+        try {
+          await api(`/api/category-images/${styleId}`, { method: "PUT", body: JSON.stringify({ imageData }) });
+          state.categoryImages[styleId] = imageData;
+          renderCategoryImageManager();
+          renderStylePresets();
+          showToast(`Gambar untuk ${styleId} disimpan`, "success");
+        } catch (err) {
+          showToast("Gagal upload: " + (err.message || ""), "error");
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
+  list.querySelectorAll("[data-del-img]").forEach((btn) => {
+    btn.addEventListener("click", async (e) => {
+      const styleId = e.currentTarget.getAttribute("data-del-img");
+      try {
+        await api(`/api/category-images/${styleId}`, { method: "DELETE" });
+        delete state.categoryImages[styleId];
+        renderCategoryImageManager();
+        renderStylePresets();
+        showToast(`Gambar ${styleId} dihapus`, "success");
+      } catch (err) {
+        showToast("Gagal hapus: " + (err.message || ""), "error");
+      }
+    });
+  });
 }
 
 function getActiveModels() {
@@ -1646,6 +1742,15 @@ function bindInputs() {
   document.getElementById("btn-close-admin").addEventListener("click", () => {
     document.getElementById("admin-modal").classList.add("hidden");
   });
+
+  document.getElementById("btn-category-images").addEventListener("click", () => {
+    document.getElementById("user-dropdown").classList.add("hidden");
+    openImageModal();
+  });
+  document.getElementById("btn-close-img").addEventListener("click", closeImageModal);
+  document.getElementById("img-modal").addEventListener("click", (e) => {
+    if (e.target === e.currentTarget) closeImageModal();
+  });
   document.getElementById("admin-modal").addEventListener("click", (e) => {
     if (e.target === e.currentTarget) document.getElementById("admin-modal").classList.add("hidden");
   });
@@ -2006,6 +2111,7 @@ async function init() {
       applyRoleVisibility();
       await loadApiKeyAndModels();
       await loadPrompts();
+      await loadCategoryImages();
       if (state.openCodeApiKey) fetchFreeModels();
     } catch {
       clearToken();
