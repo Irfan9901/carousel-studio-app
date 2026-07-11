@@ -1126,7 +1126,7 @@ async function generateIdeaFromNiche() {
     if (state._aborted) break;
     const modelId = modelsToTry[i];
     state.openCodeModel = modelId;
-    label.innerHTML = `<span class="inline-flex items-center gap-2"><section class="dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></section> Menggali ide… ${modelId} <span class="text-[10px] ml-1 opacity-60">Escape batal</span></span>`;
+    label.innerHTML = `<span class="inline-flex items-center gap-2"><section class="dots-container"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></section> Menggali ide… <span class="text-[10px] ml-1 opacity-60">Escape batal</span></span>`;
 
     try {
       const text = await callOpenCode(systemPrompt, userPrompt, signal);
