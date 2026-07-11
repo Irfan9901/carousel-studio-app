@@ -2313,9 +2313,15 @@ async function init() {
       if (state.openCodeApiKey) fetchFreeModels();
     } catch {
       clearToken();
+      state.currentUser = null;
+      renderUserMenu();
+      applyRoleVisibility();
       showLoginModal();
     }
   } else {
+    state.currentUser = null;
+    renderUserMenu();
+    applyRoleVisibility();
     showLoginModal();
   }
 }
