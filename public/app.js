@@ -279,27 +279,33 @@ function renderUserMenu() {
   const loginBtn = document.getElementById("btn-login-dropdown");
   const logoutBtn = document.getElementById("btn-logout");
   const aiBtn = document.getElementById("btn-ai-panel");
+  const promptBtn = document.getElementById("btn-prompt-ai");
   const adminBtn = document.getElementById("btn-admin-panel");
   const imgBtn = document.getElementById("btn-category-images");
+  const adminSection = document.getElementById("admin-only-section");
   if (label) label.textContent = u ? "Welcome, " + u.name : "Guest";
   if (info) info.textContent = u ? `${u.name} (${u.role})` : "Belum login";
+  const admin = u?.role === "admin";
   if (u) {
-    const isUserAdmin = u.role === "admin";
-    switchBtn?.classList.toggle("hidden", !isUserAdmin);
+    switchBtn?.classList.toggle("hidden", !admin);
     passwordBtn?.classList.remove("hidden");
     loginBtn?.classList.add("hidden");
     logoutBtn?.classList.remove("hidden");
-    aiBtn?.classList.toggle("hidden", !isUserAdmin);
-    adminBtn?.classList.toggle("hidden", !isUserAdmin);
-    imgBtn?.classList.toggle("hidden", !isUserAdmin);
+    aiBtn?.classList.toggle("hidden", !admin);
+    promptBtn?.classList.toggle("hidden", !admin);
+    adminBtn?.classList.toggle("hidden", !admin);
+    imgBtn?.classList.toggle("hidden", !admin);
+    adminSection?.classList.toggle("hidden", !admin);
   } else {
     switchBtn?.classList.add("hidden");
     passwordBtn?.classList.add("hidden");
     loginBtn?.classList.remove("hidden");
     logoutBtn?.classList.add("hidden");
     aiBtn?.classList.add("hidden");
+    promptBtn?.classList.add("hidden");
     adminBtn?.classList.add("hidden");
     imgBtn?.classList.add("hidden");
+    adminSection?.classList.add("hidden");
   }
   const welcome = document.getElementById("welcome-user-name");
   if (welcome) welcome.textContent = u ? u.name : "User";
@@ -341,11 +347,7 @@ function showLoginModal() {
 }
 
 function applyRoleVisibility() {
-  const isUserAdmin = isAdmin();
-  document.getElementById("admin-only-section")?.classList.toggle("hidden", !isUserAdmin);
-  document.getElementById("btn-admin-panel")?.classList.toggle("hidden", !isUserAdmin);
-  document.getElementById("btn-prompt-ai")?.classList.toggle("hidden", !isUserAdmin);
-  document.getElementById("btn-category-images")?.classList.toggle("hidden", !isUserAdmin);
+  renderUserMenu();
 }
 
 async function addUser() {
