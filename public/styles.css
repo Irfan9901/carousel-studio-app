@@ -447,11 +447,11 @@
 
 .cs-option:hover,
 .cs-option.cs-highlighted {
-  background: var(--bg-card-hover);
+  background: #3A3426;
 }
 
 .cs-option[aria-selected="true"] {
-  background: var(--amber-soft);
+  background: #4A3A1A;
   color: var(--amber);
 }
 
