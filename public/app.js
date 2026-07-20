@@ -559,6 +559,7 @@ function populateVisualCategory() {
   const cats = Object.keys(VISUAL_CATEGORIES);
   el.innerHTML = '<option value="">Pilih kategori visual</option>' + cats.map(c => `<option value="${c}">${c}</option>`).join("");
   el.value = state.visualCategory;
+  el._enhancedRefresh?.();
 }
 
 function populateNicheDropdown(selected) {
@@ -566,6 +567,7 @@ function populateNicheDropdown(selected) {
   const keys = Object.keys(NICHE_MAP).sort();
   el.innerHTML = '<option value="">Pilih niche</option>' + keys.map(k => `<option value="${k}">${k}</option>`).join("");
   if (selected && NICHE_MAP[selected]) el.value = selected;
+  el._enhancedRefresh?.();
 }
 
 function updateColorSwatches() {
@@ -1274,12 +1276,14 @@ function applyPresetData(data) {
   const nicheEl = document.getElementById("inp-evergreen-niche");
   if (nicheEl) {
     nicheEl.value = data.evergreenNiche || "";
+    nicheEl._enhancedRefresh?.();
     const subEl = document.getElementById("inp-subniche");
     if (subEl) {
       subEl.innerHTML = "";
       const items = SUBNICHE_MAP[nicheEl.value] || [];
       subEl.innerHTML = '<option value="">Pilih subniche (opsional)</option>' + items.map(i => `<option value="${i}">${i}</option>`).join("");
       subEl.value = data.subniche || "";
+      subEl._enhancedRefresh?.();
     }
   }
 
@@ -1291,17 +1295,14 @@ function applyPresetData(data) {
 
 async function loadPresets() {
   const select = document.getElementById("preset-select");
-  const dropdown = document.getElementById("preset-dropdown");
   const overlay = document.getElementById("preset-empty-overlay");
-  const triggerText = document.getElementById("preset-trigger-text");
   if (!select) return;
   const currentVal = select.value;
   select.innerHTML = '<option value="">Muat preset...</option>';
   if (!getCurrentUser()) return;
-  let presets = [];
   try {
     const data = await api("/api/presets");
-    presets = data.presets || [];
+    const presets = data.presets || [];
     for (const p of presets) {
       const opt = document.createElement("option");
       opt.value = p.id;
@@ -1314,23 +1315,7 @@ async function loadPresets() {
       overlay.classList.toggle("hidden", presets.length > 0);
     }
   } catch {}
-
-  // Re-render custom dropdown
-  if (dropdown) {
-    dropdown.innerHTML = "";
-    for (const p of presets) {
-      const opt = document.createElement("div");
-      opt.className = "option" + (p.id === select.value ? " selected" : "");
-      opt.dataset.value = p.id;
-      opt.textContent = p.name;
-      dropdown.appendChild(opt);
-    }
-  }
-  if (triggerText) {
-    const match = presets.find(p => p.id === select.value);
-    triggerText.textContent = match ? match.name : "Muat preset...";
-    triggerText.style.color = match ? "var(--cream)" : "var(--ink-faint)";
-  }
+  select._enhancedRefresh?.();
 }
 
 function showPrompt(msg, placeholder) {
@@ -1491,6 +1476,8 @@ function resetApp(silent) {
   }
   const presetEl = document.getElementById("preset-select");
   if (presetEl) presetEl.value = "";
+  // Refresh all enhanced selects
+  document.querySelectorAll("[data-enhanced]").forEach(el => el._enhancedRefresh?.());
   if (!silent) showToast("Semua input & slide direset", "default");
 }
 
@@ -1519,6 +1506,7 @@ async function fetchFreeModels() {
       state.openCodeModel = active.length ? active[0].id : "";
       select.value = state.openCodeModel;
     }
+    select._enhancedRefresh?.();
     renderAIModelList();
   } catch { showToast("Gagal memuat daftar model", "error"); }
 }
@@ -1624,6 +1612,7 @@ async function saveNicheChanges() {
     const items = SUBNICHE_MAP[el.value] || [];
     sub.innerHTML = '<option value="">Pilih subniche (opsional)</option>' + items.map(i => `<option value="${i}">${i}</option>`).join("");
     sub.value = "";
+    sub._enhancedRefresh?.();
   } catch (err) {
     showToast("Gagal menyimpan: " + err.message, "error");
   }
@@ -2452,8 +2441,7 @@ function bindInputs() {
     const items = SUBNICHE_MAP[el.value] || [];
     sub.innerHTML = '<option value="">Pilih subniche (opsional)</option>' + items.map(i => `<option value="${i}">${i}</option>`).join("");
     sub.value = "";
-  }
-  function updateNicheGenerateBtn() {
+    sub._enhancedRefresh?.();
     document.getElementById("btn-generate-idea").disabled = false;
   }
 
@@ -2715,52 +2703,6 @@ function bindInputs() {
         if (target) target.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     );
-  });
-
-  // -- Custom preset dropdown --
-  const trigger = document.getElementById("preset-trigger");
-  const dropdown = document.getElementById("preset-dropdown");
-  const presetSelect = document.getElementById("preset-select");
-  const triggerText = document.getElementById("preset-trigger-text");
-  function closePresetDropdown() {
-    if (trigger) trigger.setAttribute("aria-expanded", "false");
-    if (dropdown) dropdown.classList.add("hidden");
-  }
-  function togglePresetDropdown() {
-    const isOpen = dropdown && !dropdown.classList.contains("hidden");
-    closePresetDropdown();
-    if (!isOpen) {
-      if (trigger) trigger.setAttribute("aria-expanded", "true");
-      if (dropdown) dropdown.classList.remove("hidden");
-    }
-  }
-  if (trigger) {
-    trigger.addEventListener("click", (e) => { e.stopPropagation(); togglePresetDropdown(); });
-    trigger.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePresetDropdown(); }
-      if (e.key === "Escape") closePresetDropdown();
-    });
-  }
-  if (dropdown) {
-    dropdown.addEventListener("click", (e) => {
-      const opt = e.target.closest(".option");
-      if (!opt || !presetSelect) return;
-      const value = opt.dataset.value;
-      presetSelect.value = value;
-      if (triggerText) {
-        triggerText.textContent = value ? opt.textContent : "Muat preset...";
-        triggerText.style.color = value ? "var(--cream)" : "var(--ink-faint)";
-      }
-      dropdown.querySelectorAll(".option").forEach(o => o.classList.remove("selected"));
-      opt.classList.add("selected");
-      closePresetDropdown();
-      presetSelect.dispatchEvent(new Event("change", { bubbles: true }));
-    });
-  }
-  document.addEventListener("click", (e) => {
-    if (trigger && dropdown && !trigger.contains(e.target) && !dropdown.contains(e.target)) {
-      closePresetDropdown();
-    }
   });
 
   document.getElementById("img-modal").addEventListener("click", (e) => {
@@ -3105,6 +3047,7 @@ async function loadApiKeyAndModels() {
         .filter((m) => modelData.activeModels.includes(m.id))
         .map((m) => `<option value="${m.id}" ${m.id === state.openCodeModel ? "selected" : ""}>${m.name || m.id}</option>`)
         .join("");
+      modelSelect._enhancedRefresh?.();
     }
     if (isAdmin() && keyStatus.hasKey) {
       document.getElementById("ai-key-status").textContent = "✓ Terpasang";
@@ -3126,7 +3069,105 @@ async function loadStaticData() {
   if (subniches && typeof subniches === 'object') SUBNICHE_MAP = subniches;
 }
 
+function closeAllDropdowns() {
+  document.querySelectorAll(".enhanced-dropdown:not(.hidden)").forEach(el => {
+    el.classList.add("hidden");
+    const trigger = el.parentElement.querySelector(".enhanced-trigger");
+    if (trigger) trigger.setAttribute("aria-expanded", "false");
+  });
+}
+
+function enhanceSelect(id) {
+  const sel = document.getElementById(id);
+  if (!sel || sel.dataset.enhanced) return;
+  sel.dataset.enhanced = "true";
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "relative";
+  for (const cls of ["w-full", "flex-1", "min-w-0"]) {
+    if (sel.classList.contains(cls)) wrapper.classList.add(cls);
+  }
+
+  const isXs = sel.classList.contains("text-xs");
+  const sizing = isXs ? "px-3 py-2 text-xs" : "px-3 py-2.5 text-sm";
+  const trigger = document.createElement("div");
+  trigger.className = "input-field w-full rounded-lg " + sizing + " flex items-center gap-2 cursor-pointer enhanced-trigger";
+  trigger.tabIndex = 0;
+  trigger.setAttribute("role", "combobox");
+  trigger.setAttribute("aria-expanded", "false");
+
+  const triggerText = document.createElement("span");
+  triggerText.className = "truncate flex-1";
+  triggerText.style.color = "var(--ink-faint)";
+
+  const chevron = document.createElement("i");
+  chevron.className = "ti ti-chevron-down text-xs shrink-0";
+  chevron.style.color = "var(--ink-faint)";
+
+  trigger.append(triggerText, chevron);
+
+  const dropdown = document.createElement("div");
+  dropdown.className = "enhanced-dropdown hidden absolute left-0 right-0 top-full mt-1 z-50 rounded-lg border";
+  dropdown.style.cssText = "background:var(--bg-panel);border-color:var(--border-soft);box-shadow:0 8px 24px rgba(0,0,0,.4);max-height:200px;overflow-y:auto";
+
+  sel.style.display = "none";
+  sel.parentNode.insertBefore(wrapper, sel);
+  wrapper.append(trigger, dropdown, sel);
+
+  function refreshOptions() {
+    dropdown.innerHTML = "";
+    const selectedVal = sel.value;
+    for (const opt of sel.options) {
+      const div = document.createElement("div");
+      div.className = "option" + (opt.value === selectedVal ? " selected" : "");
+      div.dataset.value = opt.value;
+      div.textContent = opt.textContent;
+      dropdown.appendChild(div);
+    }
+    const idx = sel.selectedIndex;
+    if (idx >= 0 && sel.options[idx] && sel.options[idx].value) {
+      triggerText.textContent = sel.options[idx].textContent;
+      triggerText.style.color = "";
+    } else {
+      triggerText.textContent = sel.options[0]?.textContent || "Pilih...";
+      triggerText.style.color = "var(--ink-faint)";
+    }
+  }
+
+  refreshOptions();
+
+  trigger.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const wasOpen = !dropdown.classList.contains("hidden");
+    closeAllDropdowns();
+    if (!wasOpen) {
+      dropdown.classList.remove("hidden");
+      trigger.setAttribute("aria-expanded", "true");
+    }
+  });
+
+  trigger.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); trigger.click(); }
+    if (e.key === "Escape") closeAllDropdowns();
+  });
+
+  dropdown.addEventListener("click", (e) => {
+    const opt = e.target.closest(".option");
+    if (!opt) return;
+    sel.value = opt.dataset.value;
+    refreshOptions();
+    closeAllDropdowns();
+    sel.dispatchEvent(new Event("change", { bubbles: true }));
+  });
+
+  sel._enhancedRefresh = refreshOptions;
+}
+
 async function init() {
+  ["preset-select","inp-evergreen-niche","inp-subniche","inp-purpose",
+   "inp-audience","inp-count","inp-ratio","inp-visual-category",
+   "inp-layout","inp-model","inp-user-role"].forEach(enhanceSelect);
+
   populateVisualCategory();
   populateNicheDropdown();
   renderStylePresets();
@@ -3138,6 +3179,11 @@ async function init() {
 
   // Aktifkan :active pseudo-class di iOS Safari (tanpa ini :active tidak bekerja di <button>)
   document.body.addEventListener("touchstart", () => {}, { passive: true });
+
+  document.addEventListener("click", (e) => {
+    if (e.target.closest(".enhanced-trigger, .enhanced-dropdown")) return;
+    closeAllDropdowns();
+  });
 
   updateColorSwatches();
   updateRatioIcon();
