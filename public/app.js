@@ -2442,6 +2442,8 @@ function bindInputs() {
     sub.innerHTML = '<option value="">Pilih subniche (opsional)</option>' + items.map(i => `<option value="${i}">${i}</option>`).join("");
     sub.value = "";
     sub._enhancedRefresh?.();
+  }
+  function updateNicheGenerateBtn() {
     document.getElementById("btn-generate-idea").disabled = false;
   }
 
@@ -3174,9 +3176,11 @@ function enhanceSelect(id) {
 }
 
 async function init() {
+  console.log('[init] start');
   ["preset-select","inp-evergreen-niche","inp-subniche","inp-purpose",
    "inp-audience","inp-count","inp-ratio","inp-visual-category",
    "inp-layout","inp-model","inp-user-role"].forEach(enhanceSelect);
+  console.log('[init] enhanceSelect done');
 
   populateVisualCategory();
   populateNicheDropdown();
@@ -3184,6 +3188,7 @@ async function init() {
   bindInputs();
   renderSlidesArea();
   renderEmptyState();
+  console.log('[init] first pass done');
 
   loadStaticData().then(() => { populateVisualCategory(); populateNicheDropdown(); });
 
@@ -3197,6 +3202,7 @@ async function init() {
 
   updateColorSwatches();
   updateRatioIcon();
+  console.log('[init] sync pass done');
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && state._abortController) abortGeneration();
@@ -3230,6 +3236,7 @@ async function init() {
     showLoginModal();
   }
   loadSettings();
+  console.log('[init] complete');
 }
 
 init();
