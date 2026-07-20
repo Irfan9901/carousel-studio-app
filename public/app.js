@@ -3078,89 +3078,99 @@ function closeAllDropdowns() {
 }
 
 function enhanceSelect(id) {
-  const sel = document.getElementById(id);
-  if (!sel || sel.dataset.enhanced) return;
-  sel.dataset.enhanced = "true";
+  try {
+    const sel = document.getElementById(id);
+    if (!sel || sel.dataset.enhanced) return;
+    sel.dataset.enhanced = "true";
 
-  const wrapper = document.createElement("div");
-  wrapper.className = "relative";
-  for (const cls of ["w-full", "flex-1", "min-w-0"]) {
-    if (sel.classList.contains(cls)) wrapper.classList.add(cls);
-  }
-
-  const isXs = sel.classList.contains("text-xs");
-  const sizing = isXs ? "px-3 py-2 text-xs" : "px-3 py-2.5 text-sm";
-  const trigger = document.createElement("div");
-  trigger.className = "input-field w-full rounded-lg " + sizing + " flex items-center gap-2 cursor-pointer enhanced-trigger";
-  trigger.tabIndex = 0;
-  trigger.setAttribute("role", "combobox");
-  trigger.setAttribute("aria-expanded", "false");
-
-  const triggerText = document.createElement("span");
-  triggerText.className = "truncate flex-1";
-  triggerText.style.color = "var(--ink-faint)";
-
-  const chevron = document.createElement("i");
-  chevron.className = "ti ti-chevron-down text-xs shrink-0";
-  chevron.style.color = "var(--ink-faint)";
-
-  trigger.append(triggerText, chevron);
-
-  const dropdown = document.createElement("div");
-  dropdown.className = "enhanced-dropdown hidden absolute left-0 right-0 top-full mt-1 z-50 rounded-lg border";
-  dropdown.style.cssText = "background:var(--bg-panel);border-color:var(--border-soft);box-shadow:0 8px 24px rgba(0,0,0,.4);max-height:200px;overflow-y:auto";
-
-  sel.style.display = "none";
-  sel.parentNode.insertBefore(wrapper, sel);
-  wrapper.append(trigger, dropdown, sel);
-
-  function refreshOptions() {
-    dropdown.innerHTML = "";
-    const selectedVal = sel.value;
-    for (const opt of sel.options) {
-      const div = document.createElement("div");
-      div.className = "option" + (opt.value === selectedVal ? " selected" : "");
-      div.dataset.value = opt.value;
-      div.textContent = opt.textContent;
-      dropdown.appendChild(div);
+    const wrapper = document.createElement("div");
+    wrapper.className = "relative";
+    for (const cls of ["w-full", "flex-1", "min-w-0"]) {
+      if (sel.classList.contains(cls)) wrapper.classList.add(cls);
     }
-    const idx = sel.selectedIndex;
-    if (idx >= 0 && sel.options[idx] && sel.options[idx].value) {
-      triggerText.textContent = sel.options[idx].textContent;
-      triggerText.style.color = "";
-    } else {
-      triggerText.textContent = sel.options[0]?.textContent || "Pilih...";
-      triggerText.style.color = "var(--ink-faint)";
+
+    const isXs = sel.classList.contains("text-xs");
+    const sizing = isXs ? "px-3 py-2 text-xs" : "px-3 py-2.5 text-sm";
+    const trigger = document.createElement("div");
+    trigger.className = "input-field w-full rounded-lg " + sizing + " flex items-center gap-2 cursor-pointer enhanced-trigger";
+    trigger.tabIndex = 0;
+    trigger.setAttribute("role", "combobox");
+    trigger.setAttribute("aria-expanded", "false");
+
+    const triggerText = document.createElement("span");
+    triggerText.className = "truncate flex-1";
+    triggerText.style.color = "var(--ink-faint)";
+
+    const chevron = document.createElement("i");
+    chevron.className = "ti ti-chevron-down text-xs shrink-0";
+    chevron.style.color = "var(--ink-faint)";
+
+    trigger.append(triggerText, chevron);
+
+    const dropdown = document.createElement("div");
+    dropdown.className = "enhanced-dropdown hidden absolute left-0 right-0 top-full mt-1 z-50 rounded-lg border";
+    dropdown.style.cssText = "background:var(--bg-panel);border-color:var(--border-soft);box-shadow:0 8px 24px rgba(0,0,0,.4);max-height:200px;overflow-y:auto";
+
+    sel.style.display = "none";
+    sel.parentNode.insertBefore(wrapper, sel);
+    wrapper.append(trigger, dropdown, sel);
+
+    function refreshOptions() {
+      if (!sel || !dropdown) return;
+      dropdown.innerHTML = "";
+      const selectedVal = sel.value;
+      const opts = sel.options;
+      if (!opts) return;
+      for (let i = 0; i < opts.length; i++) {
+        const opt = opts[i];
+        const div = document.createElement("div");
+        div.className = "option" + (opt.value === selectedVal ? " selected" : "");
+        div.dataset.value = opt.value;
+        div.textContent = opt.textContent;
+        dropdown.appendChild(div);
+      }
+      const idx = sel.selectedIndex;
+      if (idx >= 0 && sel.options[idx] && sel.options[idx].value) {
+        triggerText.textContent = sel.options[idx].textContent;
+        triggerText.style.color = "";
+      } else {
+        triggerText.textContent = sel.options[0]?.textContent || "Pilih...";
+        triggerText.style.color = "var(--ink-faint)";
+      }
     }
-  }
 
-  refreshOptions();
-
-  trigger.addEventListener("click", (e) => {
-    e.stopPropagation();
-    const wasOpen = !dropdown.classList.contains("hidden");
-    closeAllDropdowns();
-    if (!wasOpen) {
-      dropdown.classList.remove("hidden");
-      trigger.setAttribute("aria-expanded", "true");
-    }
-  });
-
-  trigger.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); trigger.click(); }
-    if (e.key === "Escape") closeAllDropdowns();
-  });
-
-  dropdown.addEventListener("click", (e) => {
-    const opt = e.target.closest(".option");
-    if (!opt) return;
-    sel.value = opt.dataset.value;
     refreshOptions();
-    closeAllDropdowns();
-    sel.dispatchEvent(new Event("change", { bubbles: true }));
-  });
 
-  sel._enhancedRefresh = refreshOptions;
+    trigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const wasOpen = !dropdown.classList.contains("hidden");
+      closeAllDropdowns();
+      if (!wasOpen) {
+        dropdown.classList.remove("hidden");
+        trigger.setAttribute("aria-expanded", "true");
+      }
+    });
+
+    trigger.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); trigger.click(); }
+      if (e.key === "Escape") closeAllDropdowns();
+    });
+
+    dropdown.addEventListener("click", (e) => {
+      const opt = e.target.closest(".option");
+      if (!opt) return;
+      sel.value = opt.dataset.value;
+      refreshOptions();
+      closeAllDropdowns();
+      sel.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+
+    sel._enhancedRefresh = refreshOptions;
+  } catch (e) {
+    console.warn("enhanceSelect gagal untuk", id, e);
+    const sel = document.getElementById(id);
+    if (sel) { sel.style.display = ""; sel.dataset.enhanced = ""; }
+  }
 }
 
 async function init() {
