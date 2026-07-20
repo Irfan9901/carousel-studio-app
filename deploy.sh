@@ -9,7 +9,7 @@ echo "🚀 Deploy ke Vercel..."
 OUT=$(npx vercel deploy --prod --yes 2>&1)
 echo "$OUT"
 
-URL=$(echo "$OUT" | grep "Production" | awk '{print $NF}')
+URL=$(echo "$OUT" | grep "Production" | awk '{print $NF}' | sed 's|https://||')
 if [ -z "$URL" ]; then
   echo "❌ Gagal dapat URL deployment"
   exit 1
