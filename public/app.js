@@ -1278,7 +1278,7 @@ function applyPresetData(data) {
     if (subEl) {
       subEl.innerHTML = "";
       const items = SUBNICHE_MAP[nicheEl.value] || [];
-      subEl.innerHTML = '<option value="">Pilih subniche (opsional)</option>' + items.map(i => `<option value="${i}" title="${i}">${truncate(i, 25)}</option>`).join("");
+      subEl.innerHTML = '<option value="">Pilih subniche (opsional)</option>' + items.map(i => `<option value="${i}">${i}</option>`).join("");
       subEl.value = data.subniche || "";
     }
   }
@@ -1600,7 +1600,7 @@ async function saveNicheChanges() {
     const el = document.getElementById("inp-evergreen-niche");
     const sub = document.getElementById("inp-subniche");
     const items = SUBNICHE_MAP[el.value] || [];
-    sub.innerHTML = '<option value="">Pilih subniche (opsional)</option>' + items.map(i => `<option value="${i}" title="${i}">${truncate(i, 25)}</option>`).join("");
+    sub.innerHTML = '<option value="">Pilih subniche (opsional)</option>' + items.map(i => `<option value="${i}">${i}</option>`).join("");
     sub.value = "";
   } catch (err) {
     showToast("Gagal menyimpan: " + err.message, "error");
@@ -2428,7 +2428,7 @@ function bindInputs() {
     const el = document.getElementById("inp-evergreen-niche");
     const sub = document.getElementById("inp-subniche");
     const items = SUBNICHE_MAP[el.value] || [];
-    sub.innerHTML = '<option value="">Pilih subniche (opsional)</option>' + items.map(i => `<option value="${i}" title="${i}">${truncate(i, 25)}</option>`).join("");
+    sub.innerHTML = '<option value="">Pilih subniche (opsional)</option>' + items.map(i => `<option value="${i}">${i}</option>`).join("");
     sub.value = "";
   }
   function updateNicheGenerateBtn() {
@@ -3065,6 +3065,8 @@ async function init() {
   bindInputs();
   renderSlidesArea();
   renderEmptyState();
+
+  window.customSubnicheSelect = new CustomSelect("inp-subniche");
 
   loadStaticData().then(() => { populateVisualCategory(); populateNicheDropdown(); });
 

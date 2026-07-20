@@ -545,3 +545,22 @@
   border-color:var(--amber);
   color:#FFFFFF;
 }
+
+.custom-select{ position:relative; }
+.custom-select .input-field{ cursor:pointer; }
+.custom-select .input-field.active{ border-color:var(--amber); }
+.custom-select-panel{
+  display:none; position:absolute; left:0; right:0; top:100%;
+  margin-top:4px; background:var(--bg-card);
+  border:1px solid var(--border-soft); border-radius:8px;
+  z-index:50; max-height:200px; overflow-y:auto;
+}
+.custom-select-panel.open{ display:block; }
+.custom-select-panel .option{
+  padding:8px 12px; cursor:pointer; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  transition:background .15s; color:var(--ink);
+}
+.custom-select-panel .option:hover{ background:var(--bg-card-hover); }
+.custom-select-panel .option.selected{ color:var(--amber); }
+.light-theme .custom-select-panel{ background:#fff; border-color:#e0ddd6; }
+.light-theme .custom-select-panel .option:hover{ background:#f5f3ee; }
