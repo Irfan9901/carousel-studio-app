@@ -109,7 +109,7 @@
           </div>
 
           <label class="block text-xs mb-1.5" style="color:var(--ink-soft)">Catatan / Brand</label>
-          <textarea id="inp-brand" autocomplete="off" class="input-field w-full rounded-lg px-3 py-2.5 text-sm mb-4" rows="2" placeholder="Nama Brand Kamu" style="resize:vertical; min-height:38px"></textarea>
+          <textarea id="inp-brand" autocomplete="off" class="input-field w-full rounded-lg px-3 py-2.5 text-sm mb-4" rows="2" placeholder="Nama Brand Kamu" style="resize:none; overflow:hidden; min-height:38px"></textarea>
 
           <!-- Generate ide dari niche -->
           <div class="mb-4">
@@ -132,7 +132,7 @@
           </div>
 
           <label class="block text-xs mb-1.5" style="color:var(--ink-soft)">Topik / judul carousel <span class="text-[10px]" style="color:var(--ink-faint)">atau edit hasil generate di atas</span></label>
-          <textarea id="inp-topic" rows="2" class="input-field w-full rounded-lg px-3 py-2.5 text-sm mb-4" placeholder="contoh: 5 tips menabung untuk anak muda yang baru kerja"></textarea>
+          <textarea id="inp-topic" rows="2" class="input-field w-full rounded-lg px-3 py-2.5 text-sm mb-4" placeholder="contoh: 5 tips menabung untuk anak muda yang baru kerja" style="resize:none; overflow:hidden"></textarea>
 
           <div class="grid grid-cols-2 gap-3 mb-4">
             <div>
@@ -300,7 +300,7 @@
 
           <div class="mt-5">
             <label class="block text-xs mb-1.5" style="color:var(--ink-soft)">Intruksi Tambahan (opsional)</label>
-            <textarea id="inp-customstyle" class="input-field w-full rounded-lg px-3 py-2.5 text-sm mb-4" rows="2" placeholder="contoh: hand-drawn texture, maskot lucu" style="resize:vertical; min-height:38px"></textarea>
+            <textarea id="inp-customstyle" class="input-field w-full rounded-lg px-3 py-2.5 text-sm mb-4" rows="2" placeholder="contoh: hand-drawn texture, maskot lucu" style="resize:none; overflow:hidden; min-height:38px"></textarea>
           </div>
 
           <div>
@@ -459,23 +459,23 @@
     <div class="flex flex-col gap-3 overflow-y-auto min-h-0 flex-1">
       <div>
         <label class="block text-xs mb-1" style="color:var(--ink-soft)">System Prompt — Ide dari Niche</label>
-        <textarea id="prompt-system-idea" class="input-field w-full rounded-lg px-3 py-2 text-xs" rows="4" style="resize:vertical"></textarea>
+        <textarea id="prompt-system-idea" class="input-field w-full rounded-lg px-3 py-2 text-xs" rows="4" style="resize:none; overflow:hidden"></textarea>
       </div>
       <div>
         <label class="block text-xs mb-1" style="color:var(--ink-soft)">User Prompt — Ide dari Niche <span class="text-[10px]" style="color:var(--ink-faint)">({{niche}})</span></label>
-        <textarea id="prompt-user-idea" class="input-field w-full rounded-lg px-3 py-2 text-xs" rows="2" style="resize:vertical"></textarea>
+        <textarea id="prompt-user-idea" class="input-field w-full rounded-lg px-3 py-2 text-xs" rows="2" style="resize:none; overflow:hidden"></textarea>
       </div>
       <div>
         <label class="block text-xs mb-1" style="color:var(--ink-soft)">System Prompt — Generate Slide</label>
-        <textarea id="prompt-system-slide" class="input-field w-full rounded-lg px-3 py-2 text-xs" rows="6" style="resize:vertical"></textarea>
+        <textarea id="prompt-system-slide" class="input-field w-full rounded-lg px-3 py-2 text-xs" rows="6" style="resize:none; overflow:hidden"></textarea>
       </div>
       <div>
         <label class="block text-xs mb-1" style="color:var(--ink-soft)">User Prompt — Generate Slide <span class="text-[10px]" style="color:var(--ink-faint)">({{topic}}, {{purpose}}, {{audience}}, {{slideCount}}, {{customStyle}})</span></label>
-        <textarea id="prompt-user-slide" class="input-field w-full rounded-lg px-3 py-2 text-xs" rows="4" style="resize:vertical"></textarea>
+        <textarea id="prompt-user-slide" class="input-field w-full rounded-lg px-3 py-2 text-xs" rows="4" style="resize:none; overflow:hidden"></textarea>
       </div>
       <div>
         <label class="block text-xs mb-1" style="color:var(--ink-soft)">Negative Prompt Default</label>
-        <textarea id="prompt-negative" class="input-field w-full rounded-lg px-3 py-2 text-xs" rows="2" style="resize:vertical"></textarea>
+        <textarea id="prompt-negative" class="input-field w-full rounded-lg px-3 py-2 text-xs" rows="2" style="resize:none; overflow:hidden"></textarea>
       </div>
     </div>
     <div class="flex gap-2 mt-4">

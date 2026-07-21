@@ -1249,7 +1249,7 @@ function applyPresetData(data) {
   state.layout = data.layout || "";
 
   const topicEl = document.getElementById("inp-topic");
-  if (topicEl) topicEl.value = state.topic;
+  if (topicEl) { topicEl.value = state.topic; autoExpand(topicEl); }
   const purposeEl = document.getElementById("inp-purpose");
   if (purposeEl) purposeEl.value = state.purpose;
   const audienceEl = document.getElementById("inp-audience");
@@ -1265,11 +1265,11 @@ function applyPresetData(data) {
   const catEl = document.getElementById("inp-visual-category");
   if (catEl) catEl.value = state.visualCategory;
   const customStyleEl = document.getElementById("inp-customstyle");
-  if (customStyleEl) customStyleEl.value = state.customStyle;
+  if (customStyleEl) { customStyleEl.value = state.customStyle; autoExpand(customStyleEl); }
   const paletteEl = document.getElementById("inp-palette");
   if (paletteEl) paletteEl.value = state.palette;
   const brandEl = document.getElementById("inp-brand");
-  if (brandEl) brandEl.value = state.brandNote;
+  if (brandEl) { brandEl.value = state.brandNote; autoExpand(brandEl); }
   const layoutEl = document.getElementById("inp-layout");
   if (layoutEl) layoutEl.value = state.layout;
 
@@ -1452,6 +1452,7 @@ function resetApp(silent) {
   state.jsonGenerated = false;
 
   document.getElementById("inp-topic").value = "";
+  autoExpand(document.getElementById("inp-topic"));
   document.getElementById("inp-purpose").value = "";
   document.getElementById("inp-audience").value = "";
   document.getElementById("inp-visual-category").value = "";
@@ -1459,9 +1460,11 @@ function resetApp(silent) {
   document.getElementById("inp-count").value = "";
   document.getElementById("inp-ratio").value = "";
   document.getElementById("inp-customstyle").value = "";
+  autoExpand(document.getElementById("inp-customstyle"));
   updateColorSwatches();
   document.getElementById("inp-palette").value = "";
   document.getElementById("inp-brand").value = "";
+  autoExpand(document.getElementById("inp-brand"));
   document.getElementById("custom-ratio-fields").classList.add("hidden");
   document.getElementById("json-panel").classList.add("hidden");
 
@@ -2307,6 +2310,12 @@ function showCopySlideFailed(text) {
   }
 }
 
+function autoExpand(el) {
+  if (!el || el.tagName !== "TEXTAREA") return;
+  el.style.height = "auto";
+  el.style.height = el.scrollHeight + "px";
+}
+
 // ---------- INIT / BIND ----------
 
 function bindInputs() {
@@ -2727,6 +2736,7 @@ function bindInputs() {
       document.getElementById("prompt-system-slide").value = p.system_slide;
       document.getElementById("prompt-user-slide").value = p.user_slide;
       document.getElementById("prompt-negative").value = p.negative_prompt;
+      ["prompt-system-idea","prompt-user-idea","prompt-system-slide","prompt-user-slide","prompt-negative"].forEach(id => autoExpand(document.getElementById(id)));
     } catch (err) { showToast("Gagal memuat prompts", "error"); }
   }
   document.getElementById("btn-prompt-ai").addEventListener("click", openPromptModal);
@@ -2765,6 +2775,7 @@ function bindInputs() {
     document.getElementById("prompt-system-slide").value = prompts.system_slide;
     document.getElementById("prompt-user-slide").value = prompts.user_slide;
     document.getElementById("prompt-negative").value = prompts.negative_prompt;
+    ["prompt-system-idea","prompt-user-idea","prompt-system-slide","prompt-user-slide","prompt-negative"].forEach(id => autoExpand(document.getElementById(id)));
     try {
       await api("/api/ai/prompts", { method: "PUT", body: JSON.stringify({ prompts }) });
       state.prompts = prompts;
@@ -3237,6 +3248,12 @@ async function init() {
     showLoginModal();
   }
   loadSettings();
+  ["inp-topic","inp-brand","inp-customstyle","prompt-system-idea","prompt-user-idea","prompt-system-slide","prompt-user-slide","prompt-negative"].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener("input", () => autoExpand(el));
+    autoExpand(el);
+  });
   console.log('[init] complete');
 }
 
