@@ -356,4 +356,50 @@ router.post('/reset-admin', async (req, res) => {
   }
 });
 
-module.exports = { router, pruneExpiredTokens };
+// --- Sub-routers for cross-mounting (reduce Vercel function count) ---
+const adminRouter = express.Router();
+adminRouter.get('/config', requireAuth, async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
+    const config = await get('appConfig') || { freeLimit: 20, upgradeLink: '' };
+    res.json(config);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+adminRouter.put('/config', requireAuth, async (req, res) => {
+  try {
+    if (req.user.role !== 'admin') return res.status(403).json({ error: 'Admin only' });
+    const { freeLimit, upgradeLink } = req.body;
+    const config = {
+      freeLimit: typeof freeLimit === 'number' && freeLimit > 0 ? freeLimit : 20,
+      upgradeLink: typeof upgradeLink === 'string' ? upgradeLink : '',
+    };
+    await set('appConfig', config);
+    res.json(config);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+const generateRouter = express.Router();
+generateRouter.post('/complete', requireAuth, async (req, res) => {
+  try {
+    let users = await get('users') || [];
+    const idx = users.findIndex(u => u.id === req.user.id);
+    if (idx === -1) return res.status(404).json({ error: 'User not found' });
+
+    if (!users[idx].tier) users[idx].tier = 'paid';
+    users[idx].generateCount = (users[idx].generateCount || 0) + 1;
+    await set('users', users);
+
+    res.json({ success: true, generateCount: users[idx].generateCount });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+module.exports = { router, pruneExpiredTokens, adminRouter, generateRouter };

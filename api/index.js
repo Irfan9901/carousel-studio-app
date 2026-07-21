@@ -52,14 +52,14 @@ app.use((err, req, res, next) => {
 
 const authModule = require('./routes/auth');
 const authRouter = authModule.router;
-const { pruneExpiredTokens } = authModule;
+const { pruneExpiredTokens, adminRouter, generateRouter } = authModule;
 
 // API routes
 app.use('/api/auth', authRouter);
 app.use('/api/users', require('./routes/users'));
 app.use('/api/ai', require('./routes/ai'));
-app.use('/api/admin', require('./routes/admin'));
-app.use('/api/generate', require('./routes/generate'));
+app.use('/api/admin', adminRouter);
+app.use('/api/generate', generateRouter);
 app.use('/api/category-images', require('./routes/categoryImages'));
 app.use('/api/custom-categories', require('./routes/customCategories'));
 app.use('/api/guide', require('./routes/guide'));
