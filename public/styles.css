@@ -559,3 +559,5 @@
 .light-theme .enhanced-dropdown{ background:#fff; border-color:#e0ddd6; }
 .light-theme .enhanced-dropdown .option{ color:var(--ink); }
 .light-theme .enhanced-dropdown .option:hover{ background:#f5f3ee; }
+/* Missed Tailwind utilities */
+.min-w-0{ min-width:0; }
