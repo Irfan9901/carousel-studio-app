@@ -3141,6 +3141,7 @@ function enhanceSelect(id) {
         div.className = "option" + (opt.value === selectedVal ? " selected" : "");
         div.dataset.value = opt.value;
         div.textContent = opt.textContent;
+        div.title = opt.textContent;
         dropdown.appendChild(div);
       }
       const idx = sel.selectedIndex;
