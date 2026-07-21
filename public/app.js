@@ -337,7 +337,7 @@ async function renderUserList() {
     const users = await api("/api/users");
     const list = document.getElementById("user-list");
     list.innerHTML = `
-      <div class="text-[10px] font-medium" style="color:var(--ink-faint); border-bottom:1px solid var(--border-soft); display:grid; grid-template-columns:1fr 1fr 80px 55px 80px 28px; gap:4px; align-items:center; padding:6px 12px">
+      <div class="text-[10px] font-medium" style="position:sticky; top:0; z-index:1; background:var(--bg-card); color:var(--ink-faint); border-bottom:1px solid var(--border-soft); display:grid; grid-template-columns:1fr 1fr 80px 55px 80px 28px; gap:4px; align-items:center; padding:6px 12px">
         <span>Nama</span>
         <span>Email</span>
         <span>WA</span>
