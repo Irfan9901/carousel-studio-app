@@ -305,13 +305,22 @@
           </div>
 
           <div>
-            <label class="block text-xs mb-1.5" style="color:var(--ink-soft)">Ubah Palet Warna</label>
-            <div class="flex gap-2 items-center">
-              <button id="inp-color-1" class="color-swatch-btn rounded-lg border cursor-pointer" style="background:var(--bg-card); border-color:var(--border-soft)"></button>
-              <button id="inp-color-2" class="color-swatch-btn rounded-lg border cursor-pointer" style="background:var(--bg-card); border-color:var(--border-soft)"></button>
-              <button id="inp-color-3" class="color-swatch-btn rounded-lg border cursor-pointer" style="background:var(--bg-card); border-color:var(--border-soft)"></button>
-              <input id="inp-palette" type="text" class="input-field flex-1 rounded-lg px-3 py-2.5 text-sm hidden" placeholder="navy, putih, emas">
+            <label class="block text-xs mb-1.5" style="color:var(--ink-soft)">Palet Warna</label>
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; justify-items:center">
+              <div class="flex flex-col items-center gap-1">
+                <span style="color:var(--ink-faint); font-size:10px; line-height:1">Primer</span>
+                <button id="inp-color-1" class="color-swatch-btn rounded-lg border cursor-pointer" style="background:var(--bg-card); border-color:var(--border-soft)" title="Warna utama — latar, elemen dominan"></button>
+              </div>
+              <div class="flex flex-col items-center gap-1">
+                <span style="color:var(--ink-faint); font-size:10px; line-height:1">Sekunder</span>
+                <button id="inp-color-2" class="color-swatch-btn rounded-lg border cursor-pointer" style="background:var(--bg-card); border-color:var(--border-soft)" title="Warna pendamping, kontras"></button>
+              </div>
+              <div class="flex flex-col items-center gap-1">
+                <span style="color:var(--ink-faint); font-size:10px; line-height:1">Aksen</span>
+                <button id="inp-color-3" class="color-swatch-btn rounded-lg border cursor-pointer" style="background:var(--bg-card); border-color:var(--border-soft)" title="Warna aksen — detail, tombol, sorotan"></button>
+              </div>
             </div>
+            <input id="inp-palette" type="text" class="input-field flex-1 rounded-lg px-3 py-2.5 text-sm hidden" placeholder="navy, putih, emas">
           </div>
         </div>
 
@@ -593,7 +602,7 @@
 <div id="color-modal" role="dialog" aria-modal="true" class="hidden fixed inset-0 z-50 flex items-center justify-center" style="background:rgba(0,0,0,.6)">
   <div class="rounded-xl border w-full mx-4 p-5" style="max-width:340px; background:var(--bg-card); border-color:var(--border-strong)">
     <div class="flex items-center justify-between mb-3">
-      <h3 class="font-display text-sm" style="color:var(--cream)">Pilih Warna</h3>
+      <h3 class="font-display text-sm" style="color:var(--cream)"><span id="color-picker-title">Pilih Warna</span></h3>
       <button id="btn-close-color" class="text-lg" style="color:var(--ink-faint)"><i class="ti ti-x"></i></button>
     </div>
     <div class="mb-3 rounded-lg overflow-hidden" style="height:180px">

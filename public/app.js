@@ -616,8 +616,11 @@ function getPaletteString() {
   const c1 = state.color1 || "";
   const c2 = state.color2 || "";
   const c3 = state.color3 || "";
-  const colors = [c1, c2, c3].filter(Boolean);
-  if (colors.length) return colors.join(", ");
+  const parts = [];
+  if (c1) parts.push(`Primary (backgrounds, main elements): ${c1}`);
+  if (c2) parts.push(`Secondary: ${c2}`);
+  if (c3) parts.push(`Accent: ${c3}`);
+  if (parts.length) return parts.join(". ");
   return state.palette || "";
 }
 
@@ -717,6 +720,12 @@ function applyStylePalette(styleId) {
 let _cpTarget = null;
 let _cpH = 0, _cpS = 100, _cpV = 100;
 let _cpCache = null;
+
+function getContrastColor(hex) {
+  const h = hex.replace("#", "");
+  const r = parseInt(h.slice(0, 2), 16), g = parseInt(h.slice(2, 4), 16), b = parseInt(h.slice(4, 6), 16);
+  return (r * 0.299 + g * 0.587 + b * 0.114) > 150 ? "#000" : "#FFF";
+}
 
 function hsvToRgb(h, s, v) {
   s /= 100; v /= 100;
@@ -868,6 +877,9 @@ function openColorPicker(target) {
   _cpS = hsv.s;
   _cpV = hsv.v;
 
+  const labelMap = { color1: "Primer", color2: "Sekunder", color3: "Aksen" };
+  document.getElementById("color-picker-title").textContent = "Pilih Warna " + (labelMap[target] || "");
+
   document.getElementById("color-preview").style.background = currentHex;
   document.getElementById("color-hex").value = currentHex.slice(1);
   document.getElementById("color-hue").value = _cpH;
@@ -875,9 +887,10 @@ function openColorPicker(target) {
   // Populate presets from current style palette
   const presetsEl = document.getElementById("color-presets");
   const palette = state.stylePreset ? STYLE_PALETTES[state.stylePreset] : null;
+  const chipNames = ["Primer", "Sekunder", "Aksen"];
   if (palette && palette.length) {
-    presetsEl.innerHTML = palette.map(c =>
-      `<button class="preset-chip rounded-lg border" style="width:28px;height:28px;background:${c};border-color:var(--border-soft)" data-color="${c}"></button>`
+    presetsEl.innerHTML = palette.map((c, i) =>
+      `<button class="preset-chip rounded-lg border flex flex-col items-center justify-center gap-0.5" style="width:auto;height:36px;padding:2px 8px;background:${c};border-color:var(--border-soft);color:${getContrastColor(c)};font-size:9px;line-height:1" data-color="${c}">${chipNames[i] || ""}</button>`
     ).join("");
   } else {
     presetsEl.innerHTML = "";
@@ -2213,7 +2226,12 @@ function buildSingleSlideJson(slide, idx) {
       preset: state.stylePreset,
       layout: state.layout || null,
       style_tags: activeStyleTags(),
-      palette: getPaletteString() || "konsisten di semua slide, pilih warna yang harmonis",
+      palette: {
+        primary: state.color1 || null,
+        secondary: state.color2 || null,
+        accent: state.color3 || null,
+        description: getPaletteString() || "konsisten di semua slide, pilih warna yang harmonis",
+      },
       lighting: state.lightingNote,
       composition: state.compositionNote,
       brand_note: state.brandNote || null,
@@ -2236,7 +2254,12 @@ function buildJsonOutput() {
       preset: state.stylePreset,
       layout: state.layout || null,
       style_tags: activeStyleTags(),
-      palette: getPaletteString() || "konsisten di semua slide, pilih warna yang harmonis",
+      palette: {
+        primary: state.color1 || null,
+        secondary: state.color2 || null,
+        accent: state.color3 || null,
+        description: getPaletteString() || "konsisten di semua slide, pilih warna yang harmonis",
+      },
       lighting: state.lightingNote,
       composition: state.compositionNote,
       brand_note: state.brandNote || null,
