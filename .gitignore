@@ -5,3 +5,4 @@ data.json
 .vercel
 .env*
 test-results/
+client_secret_*
