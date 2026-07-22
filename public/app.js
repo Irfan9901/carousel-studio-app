@@ -3186,25 +3186,18 @@ function bindInputs() {
   });
   document.getElementById("btn-forgot").addEventListener("click", async () => {
     const email = document.getElementById("inp-forgot-email").value.trim();
-    const phone = normalizePhone(document.getElementById("inp-forgot-phone").value);
     if (!email) { showToast("Masukkan email", "error"); return; }
-    if (!phone) { showToast("Masukkan nomor WhatsApp", "error"); return; }
-    const waWindow = window.open("", "_blank");
     try {
-      const result = await api("/api/auth/forgot-password", {
+      await api("/api/auth/forgot-password", {
         method: "POST",
-        body: JSON.stringify({ email, phone }),
+        body: JSON.stringify({ email }),
       });
-      waWindow.location.href = `https://wa.me/${result.waNumber}?text=${encodeURIComponent('Token reset Carofeed: ' + result.resetToken)}`;
-      showToast("Cek WhatsApp untuk token reset", "success");
+      showToast("Cek email untuk token reset", "success");
       document.getElementById("forgot-form").classList.add("hidden");
       document.getElementById("reset-form").classList.remove("hidden");
-    } catch (err) { waWindow.close(); showAlert(err.message); }
+    } catch (err) { showAlert(err.message); }
   });
   document.getElementById("inp-forgot-email").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") document.getElementById("btn-forgot").click();
-  });
-  document.getElementById("inp-forgot-phone").addEventListener("keydown", (e) => {
     if (e.key === "Enter") document.getElementById("btn-forgot").click();
   });
 
@@ -3232,7 +3225,6 @@ function bindInputs() {
       document.getElementById("inp-reset-token").value = "";
       document.getElementById("inp-reset-password").value = "";
       document.getElementById("inp-reset-confirm").value = "";
-      document.getElementById("token-display-area").classList.add("hidden");
     } catch (err) { showToast(err.message, "error"); }
   });
   document.getElementById("inp-reset-confirm").addEventListener("keydown", (e) => {

@@ -708,30 +708,21 @@
 
       <!-- Forgot form -->
       <div id="forgot-form" class="hidden rounded-2xl border p-6" style="background:var(--bg-card); border-color:var(--border-soft)">
-        <p class="text-xs mb-4 text-center" style="color:var(--ink-faint)">Masukkan email & nomor WA untuk dapatkan token reset</p>
-        <div class="mb-3">
+        <p class="text-xs mb-4 text-center" style="color:var(--ink-faint)">Masukkan email untuk dapatkan token reset</p>
+        <div class="mb-4">
           <label class="block text-xs mb-1.5" style="color:var(--ink-soft)">Email</label>
           <input id="inp-forgot-email" type="email" autocomplete="email" class="input-field w-full rounded-xl px-4 py-3 text-sm" placeholder="email@contoh.com">
         </div>
-        <div class="mb-4">
-          <label class="block text-xs mb-1.5" style="color:var(--ink-soft)">No. WhatsApp</label>
-          <input id="inp-forgot-phone" type="tel" class="input-field w-full rounded-xl px-4 py-3 text-sm" placeholder="08... / 628...">
-        </div>
-        <button id="btn-forgot" class="btn-primary w-full rounded-xl px-4 py-3 text-sm font-semibold shadow-lg mb-3">Kirim Token via WhatsApp</button>
+        <button id="btn-forgot" class="btn-primary w-full rounded-xl px-4 py-3 text-sm font-semibold shadow-lg mb-3">Kirim Token via Email</button>
         <button id="btn-back-login" class="text-xs w-full text-center" style="color:var(--ink-faint)">Kembali ke Login</button>
       </div>
 
       <!-- Reset form -->
       <div id="reset-form" class="hidden rounded-2xl border p-6" style="background:var(--bg-card); border-color:var(--border-soft)">
         <p class="text-xs mb-4 text-center" style="color:var(--ink-faint)">Masukkan token & password baru</p>
-        <div id="token-display-area" class="hidden mb-3 rounded-lg p-3 text-center overflow-x-auto" style="background:var(--amber-soft); border:1px solid var(--amber-dim)">
-          <p class="text-[10px] mb-1" style="color:var(--ink-faint)">Token reset Anda:</p>
-          <p id="token-display" class="font-mono text-sm font-bold" style="color:var(--amber); word-break:break-all"></p>
-          <p class="text-[10px] mt-1" style="color:var(--ink-faint)">Salin token ini atau masukkan manual. Berlaku 1 jam.</p>
-        </div>
         <div class="mb-3">
           <label class="block text-xs mb-1.5" style="color:var(--ink-soft)">Token Reset</label>
-          <input id="inp-reset-token" type="text" class="input-field w-full rounded-xl px-4 py-3 text-sm font-mono" placeholder="tempel token dari WA" style="word-break:break-all;overflow-x:auto">
+          <input id="inp-reset-token" type="text" class="input-field w-full rounded-xl px-4 py-3 text-sm font-mono" placeholder="tempel token dari email" style="word-break:break-all;overflow-x:auto">
         </div>
         <div class="mb-3">
           <label class="block text-xs mb-1.5" style="color:var(--ink-soft)">Password Baru</label>

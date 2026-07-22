@@ -6,6 +6,7 @@ const { get, set } = require('../../lib/db');
 const { hashPassword, verifyPassword } = require('../../lib/crypto');
 const { generateToken, requireAuth } = require('../middleware/auth');
 const { normalizePhone } = require('../../lib/phone');
+const sendEmail = require('../lib/email');
 
 const router = express.Router();
 
@@ -256,20 +257,15 @@ router.post('/change-password', requireAuth, async (req, res) => {
 
 router.post('/forgot-password', authLimiter, async (req, res) => {
   try {
-    const { email, phone } = req.body;
-    if (!email || !phone) {
-      return res.status(400).json({ error: 'Email and phone required' });
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ error: 'Email required' });
     }
 
     let users = await get('users');
     if (!users) users = [];
     const user = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
     if (!user) return res.status(404).json({ error: 'Email anda belum terdaftar, segera hubungi admin' });
-
-    const storedPhone = normalizePhone(user.phone || '');
-    if (storedPhone && storedPhone !== normalizePhone(phone)) {
-      return res.status(401).json({ error: 'Phone number does not match' });
-    }
 
     await pruneExpiredTokens();
     const resetToken = crypto.randomBytes(32).toString('hex');
@@ -283,11 +279,25 @@ router.post('/forgot-password', authLimiter, async (req, res) => {
     });
     await set('resetTokens', resetTokens);
 
-    res.json({
-      success: true,
-      resetToken,
-      waNumber: storedPhone || normalizePhone(phone),
-    });
+    const html = `
+      <div style="font-family:sans-serif;max-width:480px;margin:0 auto">
+        <h2 style="color:#E8A33D">Reset Password Carofeed</h2>
+        <p>Halo <strong>${user.name || 'User'}</strong>,</p>
+        <p>Token reset password Anda:</p>
+        <div style="background:#2A271E;padding:12px 16px;border-radius:8px;font-family:monospace;font-size:16px;color:#E8A33D;word-break:break-all;margin:16px 0;text-align:center">
+          ${resetToken}
+        </div>
+        <p style="color:#948C7A;font-size:12px">Token berlaku 1 jam. Abaikan email ini jika Anda tidak meminta reset password.</p>
+      </div>
+    `;
+
+    try {
+      await sendEmail(email, 'Token Reset Password Carofeed', html);
+      res.json({ success: true });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Gagal mengirim email. Coba lagi nanti.' });
+    }
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Server error' });
