@@ -3235,6 +3235,8 @@ function bindInputs() {
   document.getElementById("auth-tab-login").addEventListener("click", () => {
     document.getElementById("login-form").classList.remove("hidden");
     document.getElementById("register-form").classList.add("hidden");
+    document.getElementById("forgot-form").classList.add("hidden");
+    document.getElementById("reset-form").classList.add("hidden");
     document.getElementById("auth-tab-login").style.background = "var(--amber)";
     document.getElementById("auth-tab-login").style.color = "#1A1408";
     document.getElementById("auth-tab-register").style.background = "transparent";
@@ -3243,6 +3245,8 @@ function bindInputs() {
   document.getElementById("auth-tab-register").addEventListener("click", () => {
     document.getElementById("login-form").classList.add("hidden");
     document.getElementById("register-form").classList.remove("hidden");
+    document.getElementById("forgot-form").classList.add("hidden");
+    document.getElementById("reset-form").classList.add("hidden");
     document.getElementById("auth-tab-register").style.background = "var(--amber)";
     document.getElementById("auth-tab-register").style.color = "#1A1408";
     document.getElementById("auth-tab-login").style.background = "transparent";
@@ -3251,6 +3255,8 @@ function bindInputs() {
   document.getElementById("btn-back-to-login").addEventListener("click", () => {
     document.getElementById("login-form").classList.remove("hidden");
     document.getElementById("register-form").classList.add("hidden");
+    document.getElementById("forgot-form").classList.add("hidden");
+    document.getElementById("reset-form").classList.add("hidden");
     document.getElementById("auth-tab-login").style.background = "var(--amber)";
     document.getElementById("auth-tab-login").style.color = "#1A1408";
     document.getElementById("auth-tab-register").style.background = "transparent";
