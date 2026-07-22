@@ -265,7 +265,7 @@ router.post('/forgot-password', authLimiter, async (req, res) => {
     let users = await get('users');
     if (!users) users = [];
     const user = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
-    if (!user) return res.status(404).json({ error: 'Email anda belum terdaftar, segera hubungi admin' });
+    if (!user) return res.status(404).json({ error: `Email ${email} tidak ditemukan` });
 
     await pruneExpiredTokens();
     const resetToken = crypto.randomBytes(32).toString('hex');
