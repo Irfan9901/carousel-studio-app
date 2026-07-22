@@ -506,7 +506,6 @@ function showLoginModal() {
   document.getElementById("inp-login-email").value = localStorage.getItem("cps_last_email") || "";
   document.getElementById("inp-login-password").value = "";
   document.getElementById("inp-forgot-email").value = "";
-  document.getElementById("inp-forgot-phone").value = "";
   document.getElementById("register-form").querySelector("input").value = "";
   document.getElementById("inp-register-email").value = "";
   document.getElementById("inp-register-password").value = "";
