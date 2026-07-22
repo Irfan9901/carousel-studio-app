@@ -1129,8 +1129,8 @@ async function renderEmptyState() {
       <div class="rounded-lg border px-3 py-2.5 flex items-start gap-2.5 ${i === guide.length - 1 && guide.length % 2 === 1 ? 'col-span-2' : ''}" style="background:var(--bg-card); border-color:var(--border-soft)">
         <span class="guide-step-num flex-shrink-0 font-semibold" style="color:var(--amber)">${i + 1}.</span>
         <div class="flex-1">
-          <p class="lg:text-sm text-xs font-medium" style="color:var(--cream)">${escapeHtml(step.title)}</p>
-          <p class="lg:text-sm text-[10px] mt-0.5" style="color:var(--ink-soft)">${escapeHtml(step.description)}</p>
+          <p class="lg:text-sm text-xs font-medium" style="color:var(--cream); margin:0">${escapeHtml(step.title)}</p>
+          <p class="lg:text-sm text-[10px] mt-0.5" style="color:var(--ink-soft); margin:0">${escapeHtml(step.description)}</p>
         </div>
       </div>
     `).join("");
