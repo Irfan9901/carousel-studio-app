@@ -2944,7 +2944,7 @@ function bindInputs() {
       document.getElementById("prompt-system-slide").value = p.system_slide;
       document.getElementById("prompt-user-slide").value = p.user_slide;
       document.getElementById("prompt-negative").value = p.negative_prompt;
-      ["prompt-system-idea","prompt-user-idea","prompt-system-slide","prompt-user-slide","prompt-negative"].forEach(id => autoExpand(document.getElementById(id)));
+      ["prompt-system-idea","prompt-system-slide","prompt-negative"].forEach(id => autoExpand(document.getElementById(id)));
     } catch (err) { showToast("Gagal memuat prompts", "error"); }
   }
   document.getElementById("btn-prompt-ai").addEventListener("click", openPromptModal);
@@ -2958,6 +2958,9 @@ function bindInputs() {
     const isOpen = !content.classList.contains("hidden");
     content.classList.toggle("hidden");
     icon.style.transform = isOpen ? "rotate(0deg)" : "rotate(90deg)";
+    if (!isOpen) {
+      ["prompt-user-idea","prompt-user-slide"].forEach(id => { const el = document.getElementById(id); if (el) autoExpand(el); });
+    }
   });
   document.getElementById("prompt-modal").addEventListener("click", (e) => {
     if (e.target === e.currentTarget) { document.getElementById("prompt-modal").classList.add("hidden"); unlockScroll(); }
@@ -2990,7 +2993,7 @@ function bindInputs() {
     document.getElementById("prompt-system-slide").value = prompts.system_slide;
     document.getElementById("prompt-user-slide").value = prompts.user_slide;
     document.getElementById("prompt-negative").value = prompts.negative_prompt;
-    ["prompt-system-idea","prompt-user-idea","prompt-system-slide","prompt-user-slide","prompt-negative"].forEach(id => autoExpand(document.getElementById(id)));
+    ["prompt-system-idea","prompt-system-slide","prompt-negative"].forEach(id => autoExpand(document.getElementById(id)));
     try {
       await api("/api/ai/prompts", { method: "PUT", body: JSON.stringify({ prompts }) });
       state.prompts = prompts;
