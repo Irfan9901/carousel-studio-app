@@ -362,7 +362,10 @@ async function renderUserList() {
         <span style="color:var(--cream); overflow:hidden; text-overflow:ellipsis; white-space:nowrap" title="${escapeHtml(u.name)}">${escapeHtml(u.name)}</span>
         <span style="color:var(--ink-faint); overflow:hidden; text-overflow:ellipsis; white-space:nowrap" title="${escapeHtml(u.email)}">${escapeHtml(u.email)}</span>
         <input data-phone-user="${u.id}" type="tel" value="${escapeHtml(u.phone || "")}" class="input-field rounded px-1.5 py-0.5 text-xs" style="width:100%; background:var(--bg-card); color:var(--ink-soft); box-sizing:border-box" placeholder="WA">
-        <span class="px-1 py-0.5 rounded text-[10px] text-center" style="background:var(--amber-soft); color:var(--amber)">${u.role}</span>
+        <select data-role-user="${u.id}" class="input-field rounded px-1 py-0.5 text-[10px]" style="width:100%; background:var(--bg-card); color:var(--cream); box-sizing:border-box">
+          <option value="user" ${u.role === 'user' ? 'selected' : ''}>user</option>
+          <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>admin</option>
+        </select>
         <select data-tier-user="${u.id}" class="input-field rounded px-1 py-0.5 text-[10px]" style="width:100%; background:var(--bg-card); color:var(--cream); box-sizing:border-box">
           <option value="free" ${u.tier === 'free' ? 'selected' : ''}>Free${u.tier === 'free' ? ` (${u.generateCount || 0})` : ''}</option>
           <option value="paid" ${u.tier === 'paid' ? 'selected' : ''}>Paid</option>
@@ -3047,6 +3050,16 @@ function bindInputs() {
         });
         renderUserList();
       } catch (e) { console.warn('Gagal mengubah tier:', e); }
+    }
+    const roleInput = e.target.closest("[data-role-user]");
+    if (roleInput) {
+      try {
+        await api(`/api/users/${roleInput.getAttribute("data-role-user")}`, {
+          method: "PUT",
+          body: JSON.stringify({ role: roleInput.value }),
+        });
+        renderUserList();
+      } catch (e) { console.warn('Gagal mengubah role:', e); }
     }
   });
   document.getElementById("user-list").addEventListener("click", (e) => {
