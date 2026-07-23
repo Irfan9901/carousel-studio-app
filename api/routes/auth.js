@@ -45,21 +45,32 @@ async function ensureAdminExists() {
     const hasAdmin = users.some((u) => u && typeof u === 'object' && u.role === 'admin');
     if (!hasAdmin) {
       if (process.env.VERCEL === '1' && !process.env.ADMIN_SEED_PASSWORD) {
-        throw new Error('ADMIN_SEED_PASSWORD env var required on Vercel to seed admin. Set it and redeploy.');
+        console.warn('ADMIN_SEED_PASSWORD not set — admin cannot be auto-seeded on Vercel. Use /api/auth/reset-admin instead.');
+        return users;
       }
       const adminPwPlain = process.env.ADMIN_SEED_PASSWORD || crypto.randomBytes(4).toString('hex');
       const adminPassword = await hashPassword(adminPwPlain);
-      users.push({
-        id: 's-admin-001',
-        name: 'Admin',
-        email: 'admin@cps.local',
-        phone: '',
-        password: adminPassword,
-        role: 'admin',
-        tier: 'paid',
-        generateCount: 0,
-        createdAt: Date.now(),
-      });
+      // Cek apakah sudah ada user dengan email admin (misal hasil register sebelumnya)
+      const existing = users.findIndex(u => u.email === 'admin@cps.local');
+      if (existing !== -1) {
+        // Upgrade jadi admin daripada bikin duplikat
+        users[existing].role = 'admin';
+        users[existing].tier = 'paid';
+        users[existing].password = adminPassword;
+        if (users[existing].email !== 'admin@cps.local') users[existing].email = 'admin@cps.local';
+      } else {
+        users.push({
+          id: 's-admin-001',
+          name: 'Admin',
+          email: 'admin@cps.local',
+          phone: '',
+          password: adminPassword,
+          role: 'admin',
+          tier: 'paid',
+          generateCount: 0,
+          createdAt: Date.now(),
+        });
+      }
       if (process.env.VERCEL !== '1') {
         console.log('========================================================================');
         console.log(` Admin seeded — login: admin@cps.local / ${adminPwPlain}`);
