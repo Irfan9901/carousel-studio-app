@@ -487,41 +487,43 @@
 
 <!-- PROMPT MODAL -->
 <div id="prompt-modal" role="dialog" aria-modal="true" class="hidden fixed inset-0 z-50 flex items-center justify-center" style="background:rgba(0,0,0,.6)">
-  <div class="rounded-xl border w-full max-w-md mx-4 p-5 flex flex-col" style="background:var(--bg-card); border-color:var(--border-strong); max-height:85vh">
-    <div class="flex items-center justify-between mb-4">
+  <div class="rounded-xl border w-full max-w-lg mx-4 flex flex-col" style="background:var(--bg-card); border-color:var(--border-strong); max-height:85vh; overflow:hidden">
+    <div class="shrink-0 flex items-center justify-between" style="padding:20px 20px 0">
       <h3 class="font-display text-sm" style="color:var(--cream)">Kelola Prompt AI</h3>
       <button id="btn-close-prompt" class="text-lg" style="color:var(--ink-faint)"><i class="ti ti-x"></i></button>
     </div>
-    <div class="flex flex-col gap-3 overflow-y-auto min-h-0 flex-1">
-      <div>
-        <label class="block text-xs mb-1" style="color:var(--ink-soft)">System Prompt — Ide dari Niche</label>
-        <textarea id="prompt-system-idea" class="input-field w-full rounded-lg px-3 py-2 text-xs" rows="4" style="resize:none; overflow:hidden"></textarea>
-      </div>
-      <div>
-        <label class="block text-xs mb-1" style="color:var(--ink-soft)">System Prompt — Generate Slide</label>
-        <textarea id="prompt-system-slide" class="input-field w-full rounded-lg px-3 py-2 text-xs" rows="6" style="resize:none; overflow:hidden"></textarea>
-      </div>
-      <div>
-        <label class="block text-xs mb-1" style="color:var(--ink-soft)">Negative Prompt Default</label>
-        <textarea id="prompt-negative" class="input-field w-full rounded-lg px-3 py-2 text-xs" rows="2" style="resize:none; overflow:hidden"></textarea>
-      </div>
-      <hr style="border-color:var(--border-soft)">
-      <button id="btn-toggle-extra" type="button" class="flex items-center gap-2 w-full py-2 cursor-pointer text-xs" style="color:var(--ink-soft)">
-        <i id="icon-extra" class="ti ti-chevron-right text-sm"></i>
-        Prompt Tambahan (opsional)
-      </button>
-      <div id="extra-prompts" class="hidden flex flex-col gap-3">
+    <div class="flex flex-col overflow-y-auto min-h-0 flex-1">
+      <div class="flex flex-col gap-3" style="padding:16px 20px">
         <div>
-          <label class="block text-xs mb-1" style="color:var(--ink-soft)">User Prompt — Ide dari Niche <span class="text-[10px]" style="color:var(--ink-faint)">({{niche}})</span></label>
-          <textarea id="prompt-user-idea" class="input-field w-full rounded-lg px-3 py-2 text-xs" rows="2" style="resize:none; overflow:hidden"></textarea>
+          <label class="block text-xs mb-1" style="color:var(--ink-soft)">System Prompt — Ide dari Niche</label>
+          <textarea id="prompt-system-idea" class="input-field w-full rounded-lg px-3 py-2 text-xs" rows="4" style="resize:none; overflow:hidden"></textarea>
         </div>
         <div>
-          <label class="block text-xs mb-1" style="color:var(--ink-soft)">User Prompt — Generate Slide <span class="text-[10px]" style="color:var(--ink-faint)">({{topic}}, {{purpose}}, {{audience}}, {{slideCount}}, {{customStyle}})</span></label>
-          <textarea id="prompt-user-slide" class="input-field w-full rounded-lg px-3 py-2 text-xs" rows="4" style="resize:none; overflow:hidden"></textarea>
+          <label class="block text-xs mb-1" style="color:var(--ink-soft)">System Prompt — Generate Slide</label>
+          <textarea id="prompt-system-slide" class="input-field w-full rounded-lg px-3 py-2 text-xs" rows="6" style="resize:none; overflow:hidden"></textarea>
+        </div>
+        <div>
+          <label class="block text-xs mb-1" style="color:var(--ink-soft)">Negative Prompt Default</label>
+          <textarea id="prompt-negative" class="input-field w-full rounded-lg px-3 py-2 text-xs" rows="2" style="resize:none; overflow:hidden"></textarea>
+        </div>
+        <hr style="border-color:var(--border-soft)">
+        <button id="btn-toggle-extra" type="button" class="flex items-center gap-2 w-full py-2 cursor-pointer text-xs" style="color:var(--ink-soft)">
+          <i id="icon-extra" class="ti ti-chevron-right text-sm"></i>
+          Prompt Tambahan (opsional)
+        </button>
+        <div id="extra-prompts" class="hidden flex flex-col gap-3">
+          <div>
+            <label class="block text-xs mb-1" style="color:var(--ink-soft)">User Prompt — Ide dari Niche <span class="text-[10px]" style="color:var(--ink-faint)">({{niche}})</span></label>
+            <textarea id="prompt-user-idea" class="input-field w-full rounded-lg px-3 py-2 text-xs" rows="2" style="resize:none; overflow:hidden"></textarea>
+          </div>
+          <div>
+            <label class="block text-xs mb-1" style="color:var(--ink-soft)">User Prompt — Generate Slide <span class="text-[10px]" style="color:var(--ink-faint)">({{topic}}, {{purpose}}, {{audience}}, {{slideCount}}, {{customStyle}})</span></label>
+            <textarea id="prompt-user-slide" class="input-field w-full rounded-lg px-3 py-2 text-xs" rows="4" style="resize:none; overflow:hidden"></textarea>
+          </div>
         </div>
       </div>
     </div>
-    <div class="flex gap-2 mt-4">
+    <div class="shrink-0 flex gap-2" style="padding:0 20px 20px">
       <button id="btn-reset-prompts" class="rounded-lg px-3 py-2 text-xs" style="background:var(--bg-card-hover); color:var(--ink-soft)">Reset ke Default</button>
       <button id="btn-save-prompts" class="rounded-lg px-4 py-2 text-xs font-medium flex-1" style="background:var(--amber); color:#1a1a1a">Simpan</button>
     </div>
