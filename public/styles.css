@@ -75,35 +75,25 @@
 
   .btn-primary{
     background:#ffbe0b;
+    border:1px solid #ffbe0b;
     color:#1A1408;
-    font-weight:600;
-    transition:filter .15s ease, transform .1s ease;
+    transition:all .15s ease;
   }
-  .btn-primary:active{ filter:brightness(1.15); transform:scale(.98); }
+  .btn-primary:active{ filter:brightness(1.15); }
   @media (hover: hover){
     .btn-primary:hover{ filter:brightness(1.15); }
   }
-  .btn-primary:disabled{ opacity:.4; cursor:not-allowed; filter:none; }
+  .btn-primary:disabled{ opacity:.5; cursor:not-allowed; filter:none; }
 
   .btn-ghost{
-    background:transparent;
-    border:1px solid #ffbe0b;
-    color:#ffbe0b;
-    transition:all .15s ease;
-    -webkit-tap-highlight-color:transparent;
-  }
-  .btn-ghost:active{
-    border-color:#ffbe0b;
-    color:#1A1408;
     background:#ffbe0b;
-    transform:scale(.97);
+    border:1px solid #ffbe0b;
+    color:#1A1408;
+    transition:all .15s ease;
   }
+  .btn-ghost:active{ filter:brightness(1.15); }
   @media (hover: hover){
-    .btn-ghost:hover{
-      border-color:#ffbe0b;
-      color:#1A1408;
-      background:#ffbe0b;
-    }
+    .btn-ghost:hover{ filter:brightness(1.15); }
   }
   .btn-slide-copy{ opacity:.7; }
   .btn-slide-copy:active{ opacity:1; }
@@ -522,26 +512,16 @@
 .light-theme .guide-step-num{
   background:transparent !important;
 }
-.light-theme .btn-primary{
-  background:var(--amber);
-  color:#FFFFFF;
-}
-.light-theme .btn-primary:hover{
-  filter:brightness(1.2);
-}
-.light-theme .btn-ghost{
-  border-color:var(--amber);
-  color:var(--amber);
-}
-.light-theme .btn-ghost:hover{
-  background:var(--amber);
-  color:#FFFFFF;
-}
+.light-theme .btn-primary,
+.light-theme .btn-ghost,
 .light-theme .btn-ai{
   background:var(--amber);
   border-color:var(--amber);
   color:#FFFFFF;
 }
+.light-theme .btn-primary:hover,
+.light-theme .btn-ghost:hover,
+.light-theme .btn-ai:hover{ filter:brightness(1.2); }
 
 .enhanced-trigger{ overflow:hidden; transition:border-color .15s ease; }
 .enhanced-trigger:hover,
