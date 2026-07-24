@@ -1571,6 +1571,12 @@ async function savePreset() {
   const name = await showPrompt("Nama preset:", "cth: Kesehatan Mental");
   if (!name) return;
   try {
+    const res = await api("/api/presets");
+    const exists = res.presets.some(p => p.name.toLowerCase() === name.toLowerCase());
+    if (exists) {
+      await showAlert('Nama preset "' + name + '" sudah ada. Gunakan nama yang berbeda.');
+      return savePreset();
+    }
     const data = collectPresetData();
     await api("/api/presets", {
       method: "POST",
